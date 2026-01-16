@@ -8,14 +8,14 @@ const AuthPage = () => {
     password: '',
     name: '' 
   })
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     })
-  }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -153,4 +153,4 @@ const AuthPage = () => {
   )
 }
 
-export default AuthPage
+export default AuthPage;
