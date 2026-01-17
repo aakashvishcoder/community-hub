@@ -12,6 +12,7 @@ export const useUser = () => {
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null)
+  const [posts, setPosts] = useState([])
 
   useEffect(() => {
     const savedUser = localStorage.getItem('communityHubUser')
@@ -20,23 +21,81 @@ export const UserProvider = ({ children }) => {
     }
   }, [])
 
-  const saveUser = (userData) => {
-    const fullUser = {
-      ...userData,
-      id: user?.id || Date.now().toString(),
-      joinedAt: user?.joinedAt || new Date().toISOString()
+  useEffect(() => {
+    const savedPosts = localStorage.getItem('communityHubPosts')
+    if (savedPosts) {
+      setPosts(JSON.parse(savedPosts))
     }
-    setUser(fullUser)
-    localStorage.setItem('communityHubUser', JSON.stringify(fullUser))
-  }
+  }, [])
+
+  useEffect(() => {
+    if (user !== null) {
+      localStorage.setItem('communityHubUser', JSON.stringify(user))
+    }
+  }, [user])
+
+  useEffect(() => {
+    localStorage.setItem('communityHubPosts', JSON.stringify(posts))
+  }, [posts])
+
+  const saveUser = (userData) => {
+    setUser(prevUser => ({
+      ...userData,
+      id: prevUser?.id || Date.now().toString(),
+      joinedAt: prevUser?.joinedAt || new Date().toISOString()
+    }));
+  };
 
   const logout = () => {
     setUser(null)
     localStorage.removeItem('communityHubUser')
   }
 
+  const addPost = (content) => {
+    if (!user) return
+    
+    const newPost = {
+      id: Date.now().toString(),
+      userId: user.id,
+      username: user.username || 'Anonymous',
+      displayName: user.displayName || user.username || 'Anonymous',
+      profilePicture: user.profilePicture || '',
+      content,
+      likes: 0,
+      likedByCurrentUser: false,
+      timestamp: new Date().toISOString()
+    }
+    
+    setPosts(prevPosts => [newPost, ...prevPosts])
+  }
+
+  const likePost = (postId) => {
+    setPosts(prevPosts => 
+      prevPosts.map(post => {
+        if (post.id === postId) {
+          const newLikes = post.likedByCurrentUser ? post.likes - 1 : post.likes + 1
+          return {
+            ...post,
+            likes: newLikes,
+            likedByCurrentUser: !post.likedByCurrentUser
+          }
+        }
+        return post
+      })
+    )
+  }
+
   return (
-    <UserContext.Provider value={{ user, saveUser, logout }}>
+    <UserContext.Provider 
+      value={{ 
+        user, 
+        saveUser, 
+        logout,
+        posts,
+        addPost,
+        likePost
+      }}
+    >
       {children}
     </UserContext.Provider>
   )

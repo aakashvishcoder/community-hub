@@ -1,33 +1,47 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useUser } from '../contexts/UserContext'; 
 
 const AuthPage = () => {
-  const [activeTab, setActiveTab] = useState('login')
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    name: '' 
-  })
+  const [activeTab, setActiveTab] = useState('login');
+  const [formData, setFormData] = useState({ email: '', password: '', name: '' });
   const navigate = useNavigate();
+  const { saveUser } = useUser(); 
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
-    })
+    });
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault()
-    console.log(`${activeTab} submitted`, formData)
-    alert(`Mock ${activeTab} successful!`)
-    navigate('/')
-  }
+    e.preventDefault();
+
+    const mockUser = {
+      email: formData.email,
+      username: formData.email.split('@')[0],
+      displayName: activeTab === 'signup' ? formData.name : formData.email.split('@')[0],
+      profilePicture: '',
+      bio: '',
+      socials: {}
+    };
+    
+    saveUser(mockUser); 
+
+    if (activeTab === 'signup') {
+      navigate('/profile');
+    } else {
+      navigate('/');
+    }
+  };
 
   return (
     <div className="container mx-auto px-4 py-12 max-w-md">
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          {activeTab === 'login' ? 'Welcome Back' : 'Join Our Community'}
+        </h1>
         <p className="text-gray-600">
           {activeTab === 'login' 
             ? 'Sign in to access your community resources' 
@@ -150,7 +164,7 @@ const AuthPage = () => {
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default AuthPage;
