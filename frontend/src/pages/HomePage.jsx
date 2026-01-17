@@ -29,7 +29,7 @@ const HomePage = () => {
               <div className="flex flex-col sm:flex-row justify-center gap-4">
                 <Link
                   to="/auth"
-                  className="bg-accent-500 hover:bg-accent-600 text-white font-semibold py-3.5 px-8 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5"
+                  className="bg-accent-500 hover:bg-accent-600 text-black font-semibold py-3.5 px-8 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5"
                 >
                   Join Our Community
                 </Link>
