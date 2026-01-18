@@ -1,56 +1,36 @@
 const mongoose = require('mongoose');
 
 const NewsSchema = new mongoose.Schema({
-    title: {
-        type: String,
-        required: true,
-        trim: true,
-    },
-    date: {
-        type: Data,
-        required: true,
-    },
-    time: {
-        type: String,
-        required: true,
-        trim: true,
-    },
-    category: {
-        type: String,
-        required: true,
-        trim: true,
-        enum: [
-            'Community',
-            'Resources',
-            'Events',
-            'Education'
-        ],
-    },
-    user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true,
-    },
-    description: {
-        type: String,
-        required: true,
-        trim: true,
-    },
-    exerpt: {
-        type: String,
-        required: true,
-        trim: true,
-    },
-    image: {
-        type: String,
-        required: true,
-    }
-}, {
+  title: {
+    type: String,
     required: true,
+    trim: true
+  },
+  category: {
+    type: String,
+    required: true,
+    enum: ['Community', 'Events', 'Resources', 'Education', 'Other']
+  },
+  excerpt: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  content: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  image: {
+    type: String,
+    trim: true
+  },
+  featured: {
+    type: Boolean,
+    default: false
+  }
+}, {
+  timestamps: true
 });
-
-NewsSchema.index({ date: 1});
-NewsSchema.index({ category: 1});
-NewsSchema.index({ user: 1});
 
 module.exports = mongoose.model('News', NewsSchema);

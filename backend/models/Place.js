@@ -1,48 +1,40 @@
 const mongoose = require('mongoose');
 
-const PlaceSchema =new mongoose.Schema({
-    title: {
-        type: String,
-        required: true,
-        trim: true,
-    },
-    date: {
-        type: Date,
-        required: true,
-    },
-    time: {
-        type: String,
-        required: true,
-        trim: true,
-    },
-    address: {
-        type: String,
-        required: true,
-        trim: true,
-    },
-    description: {
-        type: String,
-        required: true,
-        trim: true,
-    },
-    image: {
-        type: String,
-        required: true,
-    },
-    user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true,
-    },
-    type: {
-        type: String,
-        required: true,
-        trim: true,
-    }
-},{
-    timestamps: true
+const PlaceSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  type: {
+    type: String,
+    required: true,
+    enum: ['Park', 'Library', 'Museum', 'Community Center', 'Other']
+  },
+  address: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  description: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  hours: {
+    type: String,
+    trim: true
+  },
+  website: {
+    type: String,
+    trim: true
+  },
+  image: {
+    type: String,
+    trim: true
+  }
+}, {
+  timestamps: true
 });
-
-PlaceSchema.index({ user: 1});
 
 module.exports = mongoose.model('Place', PlaceSchema);
