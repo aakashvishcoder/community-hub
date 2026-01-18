@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react'
 
-const UserContext = createContext()
+const UserContext = createContext();
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 export const useUser = () => {
   const context = useContext(UserContext)
@@ -53,16 +54,12 @@ export const UserProvider = ({ children }) => {
   }, [posts])
 
   const saveUser = (userData) => {
-    setUser(prevUser => ({
-      ...userData,
-      id: prevUser?.id || Date.now().toString(),
-      joinedAt: prevUser?.joinedAt || new Date().toISOString()
-    }))
+    setUser(userData);
   }
 
   const logout = async () => {
     try {
-      await fetch('/api/auth/logout', {
+      await fetch(`${BACKEND_URL}/api/auth/logout`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -75,43 +72,105 @@ export const UserProvider = ({ children }) => {
     setUser(null)
     setPosts([])
     localStorage.removeItem('communityHubUser')
-
     localStorage.removeItem('communityHubPosts')
   }
 
-  const addPost = (content) => {
-    if (!user) return
+  const addPost = async (postData) => {
+    if (!user) return;
     
-    const newPost = {
-      id: Date.now().toString(),
-      userId: user.id,
-      username: user.username || 'Anonymous',
-      displayName: user.displayName || user.username || 'Anonymous',
-      profilePicture: user.profilePicture || '',
-      content,
-      likes: 0,
-      likedByCurrentUser: false,
-      timestamp: new Date().toISOString()
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/posts`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          userId: user.id,
+          content: postData.content || '',
+          imageUrl: postData.imageUrl || ''
+        })
+      });
+      
+      if (response.ok) {
+        const newPost = await response.json();
+        setPosts(prev => [newPost, ...prev]);
+      }
+    } catch (error) {
+      console.error('Error adding post:', error);
     }
-    
-    setPosts(prevPosts => [newPost, ...prevPosts])
-  }
+  };
 
-  const likePost = (postId) => {
-    setPosts(prevPosts => 
-      prevPosts.map(post => {
-        if (post.id === postId) {
-          const newLikes = post.likedByCurrentUser ? post.likes - 1 : post.likes + 1
-          return {
-            ...post,
-            likes: newLikes,
-            likedByCurrentUser: !post.likedByCurrentUser
-          }
+  const addReply = async (postId, replyData) => {
+    if (!user) return;
+    
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/posts/${postId}/reply`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          userId: user.id,
+          content: replyData.content || '',
+          imageUrl: replyData.imageUrl || ''
+        })
+      });
+      
+      if (response.ok) {
+        const updatedPost = await response.json();
+        setPosts(prev => 
+          prev.map(post => 
+            post._id === postId ? updatedPost : post
+          )
+        );
+      }
+    } catch (error) {
+      console.error('Error adding reply:', error);
+    }
+  };
+
+  const likePost = async (postId) => {
+    if (!user) return;
+    
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/posts/${postId}/like`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          userId: user.id
+        })
+      });
+      
+      if (response.ok) {
+        const updatedPost = await response.json();
+        setPosts(prev => 
+          prev.map(post => 
+            post._id === postId ? updatedPost : post
+          )
+        );
+      }
+    } catch (error) {
+      console.error('Error liking post:', error);
+    }
+  };
+
+  useEffect(() => {
+    const loadPosts = async () => {
+      try {
+        const response = await fetch(`${BACKEND_URL}/api/posts`);
+        if (response.ok) {
+          const postsData = await response.json();
+          setPosts(postsData);
         }
-        return post
-      })
-    )
-  }
+      } catch (error) {
+        console.error('Error loading posts:', error);
+      }
+    };
+    
+    loadPosts();
+  }, []);
 
   return (
     <UserContext.Provider 
@@ -122,7 +181,7 @@ export const UserProvider = ({ children }) => {
         posts,
         addPost,
         likePost,
-        loading
+        addReply, 
       }}
     >
       {children}

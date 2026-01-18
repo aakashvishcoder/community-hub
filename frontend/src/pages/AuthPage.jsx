@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useUser } from '../contexts/UserContext';
-
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 const AuthPage = () => {
   const [activeTab, setActiveTab] = useState('login');
   const [formData, setFormData] = useState({ email: '', password: '', name: '' });
@@ -24,18 +24,19 @@ const AuthPage = () => {
       let response;
       
       if (activeTab === 'signup') {
-        response = await fetch('/api/auth/register', {
+        response = await fetch(`${BACKEND_URL}/api/auth/register`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
+            name: formData.name,
             email: formData.email,
             password: formData.password
           })
         });
       } else {
-        response = await fetch('/api/auth/login', {
+        response = await fetch(`${BACKEND_URL}/api/auth/login`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -54,11 +55,12 @@ const AuthPage = () => {
       }
 
       saveUser({
-        id: data.user._id, 
+        id: data.user._id,
         email: data.user.email,
+        name: data.user.name,
         token: data.token,
         username: data.user.email.split('@')[0],
-        displayName: activeTab === 'signup' ? formData.name : data.user.email.split('@')[0]
+        displayName: data.user.name
       });
 
       navigate(activeTab === 'signup' ? '/profile' : '/');

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useUser } from '../contexts/UserContext';
 import { Link, useNavigate } from 'react-router-dom';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const ProfilePage = () => {
   const { user, saveUser, logout } = useUser();
@@ -48,20 +49,7 @@ const ProfilePage = () => {
     }
 
     try {
-      saveUser({
-        ...user,
-        username: formData.username,
-        displayName: formData.displayName,
-        bio: formData.bio,
-        profilePicture: formData.profilePicture,
-        socials: {
-          website: formData.website,
-          instagram: formData.instagram,
-          linkedin: formData.linkedin
-        }
-      });
-
-      const response = await fetch('/api/profiles', {
+      const response = await fetch(`${BACKEND_URL}/api/profiles`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -81,6 +69,17 @@ const ProfilePage = () => {
       });
 
       if (response.ok) {
+        const updatedProfile = await response.json();
+
+        saveUser({
+          ...user,
+          username: updatedProfile.username,
+          displayName: updatedProfile.displayName,
+          bio: updatedProfile.bio,
+          profilePicture: updatedProfile.profilePicture,
+          socials: updatedProfile.socials
+        });
+        
         setSuccess('Profile updated successfully!');
         setError('');
       } else {
