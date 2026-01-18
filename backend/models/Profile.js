@@ -22,22 +22,13 @@ const ProfileSchema = new mongoose.Schema({
     trim: true
   },
   profilePicture: {
-    type: String,
+    type: String, 
     trim: true
   },
   socials: {
-    website: {
-      type: String,
-      trim: true
-    },
-    instagram: {
-      type: String,
-      trim: true
-    },
-    linkedin: {
-      type: String,
-      trim: true
-    }
+    website: { type: String, trim: true },
+    instagram: { type: String, trim: true },
+    linkedin: { type: String, trim: true }
   }
 }, {
   timestamps: true

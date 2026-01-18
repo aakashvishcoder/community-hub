@@ -17,7 +17,14 @@ router.get('/:userId', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    const { userId, username, displayName, bio, profilePicture, socials } = req.body;
+    const { 
+      userId, 
+      username, 
+      displayName, 
+      bio, 
+      profilePicture, 
+      socials 
+    } = req.body;
     
     if (!userId || !username) {
       return res.status(400).json({ message: 'userId and username are required' });
@@ -29,7 +36,7 @@ router.post('/', async (req, res) => {
       profile.username = username;
       profile.displayName = displayName || profile.displayName;
       profile.bio = bio || profile.bio;
-      profile.profilePicture = profilePicture || profile.profilePicture;
+      profile.profilePicture = profilePicture || profile.profilePicture; 
       profile.socials = socials || profile.socials;
     } else {
       profile = new Profile({
@@ -37,13 +44,13 @@ router.post('/', async (req, res) => {
         username,
         displayName,
         bio,
-        profilePicture,
+        profilePicture, 
         socials
       });
     }
 
     await profile.save();
-    res.status(201).json(profile);
+    res.status(200).json(profile);
   } catch (error) {
     console.error(error);
     if (error.code === 11000) {

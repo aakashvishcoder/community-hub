@@ -1,151 +1,109 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useUser } from '../contexts/UserContext';
 import { Link } from 'react-router-dom';
 
 const CommunityFeedPage = () => {
-  const { user, posts, addPost, likePost, addReply } = useUser();
+  const { 
+    user, 
+    posts, 
+    addPost, 
+    likePost, 
+    addReply,
+    showUserProfile,
+    closeProfileModal,
+    viewedUser,
+    isProfileModalOpen
+  } = useUser();
+  
   const [newPost, setNewPost] = useState('');
-  const [imagePreview, setImagePreview] = useState(null);
   const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [replyingTo, setReplyingTo] = useState(null); 
+  const [replyingTo, setReplyingTo] = useState(null);
   const [replyText, setReplyText] = useState('');
-  const [replyImagePreview, setReplyImagePreview] = useState(null);
   const [replyImageFile, setReplyImageFile] = useState(null);
-  const fileInputRef = useRef(null);
-  const replyFileInputRef = useRef(null);
+  const [replyImagePreview, setReplyImagePreview] = useState('');
+
+  const fileToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+    });
+  };
+
+  const handleImageChange = async (e, isReply = false) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    if (!file.type.startsWith('image/')) {
+      setError('Please select an image file (jpg, png, gif)');
+      return;
+    }
+    
+    if (file.size > 5 * 1024 * 1024) {
+      setError('Image must be smaller than 5MB');
+      return;
+    }
+    
+    try {
+      const base64 = await fileToBase64(file);
+      if (isReply) {
+        setReplyImageFile(file);
+        setReplyImagePreview(base64);
+      } else {
+        setImageFile(file);
+        setImagePreview(base64);
+      }
+      setError('');
+    } catch (err) {
+      setError('Failed to process image');
+    }
+  };
 
   const handlePostSubmit = async (e) => {
     e.preventDefault();
-    if (!newPost.trim() && !imageFile) return;
+    if (!newPost.trim() && !imagePreview) return;
     
     setLoading(true);
     setError('');
     
     try {
-      let imageUrl = '';
+      await addPost({
+        content: newPost.trim(),
+        imageUrl: imagePreview
+      });
       
-      if (imageFile) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          imageUrl = e.target.result;
-          createPost(imageUrl);
-        };
-        reader.readAsDataURL(imageFile);
-      } else {
-        createPost('');
-      }
+      setNewPost('');
+      setImageFile(null);
+      setImagePreview('');
     } catch (err) {
       setError('Failed to post. Please try again.');
       console.error('Post error:', err);
+    } finally {
       setLoading(false);
     }
   };
 
   const handleReplySubmit = async (postId, e) => {
     e.preventDefault();
-    if (!replyText.trim() && !replyImageFile) return;
+    if (!replyText.trim() && !replyImagePreview) return;
     
     try {
-      let imageUrl = '';
+      await addReply(postId, {
+        content: replyText.trim(),
+        imageUrl: replyImagePreview
+      });
       
-      if (replyImageFile) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          imageUrl = e.target.result;
-          createReply(postId, imageUrl);
-        };
-        reader.readAsDataURL(replyImageFile);
-      } else {
-        createReply(postId, '');
-      }
+      setReplyText('');
+      setReplyImageFile(null);
+      setReplyImagePreview('');
+      setReplyingTo(null);
     } catch (err) {
       setError('Failed to reply. Please try again.');
       console.error('Reply error:', err);
-    }
-  };
-
-  const createPost = (imageUrl) => {
-    const postData = {
-      content: newPost.trim(),
-      imageUrl: imageUrl,
-      timestamp: new Date().toISOString()
-    };
-    
-    addPost(postData);
-    setNewPost('');
-    setImagePreview(null);
-    setImageFile(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
-    setLoading(false);
-  };
-
-  const createReply = (postId, imageUrl) => {
-    const replyData = {
-      content: replyText.trim(),
-      imageUrl: imageUrl,
-      timestamp: new Date().toISOString()
-    };
-    
-    addReply(postId, replyData);
-    setReplyText('');
-    setReplyImagePreview(null);
-    setReplyImageFile(null);
-    setReplyingTo(null);
-    if (replyFileInputRef.current) {
-      replyFileInputRef.current.value = '';
-    }
-  };
-
-  const handleImageChange = (e, isReply = false) => {
-    const file = e.target.files[0];
-    if (file) {
-      if (!file.type.startsWith('image/')) {
-        setError('Please select an image file (jpg, png, gif)');
-        return;
-      }
-      
-      if (file.size > 5 * 1024 * 1024) {
-        setError('Image must be smaller than 5MB');
-        return;
-      }
-      
-      if (isReply) {
-        setReplyImageFile(file);
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          setReplyImagePreview(e.target.result);
-          setError('');
-        };
-        reader.readAsDataURL(file);
-      } else {
-        setImageFile(file);
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          setImagePreview(e.target.result);
-          setError('');
-        };
-        reader.readAsDataURL(file);
-      }
-    }
-  };
-
-  const removeImage = (isReply = false) => {
-    if (isReply) {
-      setReplyImagePreview(null);
-      setReplyImageFile(null);
-      if (replyFileInputRef.current) {
-        replyFileInputRef.current.value = '';
-      }
-    } else {
-      setImagePreview(null);
-      setImageFile(null);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
-      }
     }
   };
 
@@ -157,11 +115,8 @@ const CommunityFeedPage = () => {
   const cancelReply = () => {
     setReplyingTo(null);
     setReplyText('');
-    setReplyImagePreview(null);
     setReplyImageFile(null);
-    if (replyFileInputRef.current) {
-      replyFileInputRef.current.value = '';
-    }
+    setReplyImagePreview('');
   };
 
   const formatTime = (timestamp) => {
@@ -186,17 +141,20 @@ const CommunityFeedPage = () => {
         {replies.map((reply, index) => (
           <div key={index} className="bg-gray-50 rounded-lg p-3">
             <div className="flex items-start space-x-2">
-              {reply.profilePicture ? (
-                <img 
-                  src={reply.profilePicture} 
-                  alt={reply.displayName} 
-                  className="w-8 h-8 rounded-full object-cover"
-                />
-              ) : (
-                <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 font-bold text-xs">
-                  {reply.displayName?.[0]?.toUpperCase() || '?'}
-                </div>
-              )}
+              <button 
+                onClick={() => showUserProfile(reply.userId)}
+                className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 font-bold text-xs hover:opacity-75"
+              >
+                {reply.profilePicture ? (
+                  <img 
+                    src={reply.profilePicture} 
+                    alt={reply.displayName} 
+                    className="w-full h-full rounded-full object-cover"
+                  />
+                ) : (
+                  reply.displayName?.[0]?.toUpperCase() || '?'
+                )}
+              </button>
               
               <div className="flex-1">
                 <div className="flex items-center space-x-1 mb-1">
@@ -235,17 +193,20 @@ const CommunityFeedPage = () => {
       {user ? (
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 mb-8">
           <div className="flex items-start space-x-3">
-            {user.profilePicture ? (
-              <img 
-                src={user.profilePicture} 
-                alt="You" 
-                className="w-10 h-10 rounded-full object-cover"
-              />
-            ) : (
-              <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold">
-                {user.username?.[0]?.toUpperCase() || 'U'}
-              </div>
-            )}
+            <button 
+              onClick={() => showUserProfile(user.id)}
+              className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold hover:opacity-75"
+            >
+              {user.profilePicture ? (
+                <img 
+                  src={user.profilePicture} 
+                  alt="You" 
+                  className="w-full h-full rounded-full object-cover"
+                />
+              ) : (
+                user.username?.[0]?.toUpperCase() || 'U'
+              )}
+            </button>
             
             <form onSubmit={handlePostSubmit} className="flex-1">
               <textarea
@@ -257,38 +218,40 @@ const CommunityFeedPage = () => {
               />
               
               {imagePreview && (
-                <div className="mt-3 relative inline-block">
+                <div className="mt-2 relative inline-block">
                   <img 
                     src={imagePreview} 
                     alt="Preview" 
-                    className="max-h-64 max-w-full rounded-lg object-contain border border-gray-300"
+                    className="max-h-48 max-w-full rounded object-contain border border-gray-300"
                   />
                   <button
                     type="button"
-                    onClick={() => removeImage(false)}
-                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600"
+                    onClick={() => {
+                      setImageFile(null);
+                      setImagePreview('');
+                    }}
+                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center hover:bg-red-600 text-xs"
                   >
                     ×
                   </button>
                 </div>
               )}
               
-              <div className="mt-3 flex justify-between items-center">
-                <label className="cursor-pointer bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors">
+              <div className="mt-2 flex justify-between items-center">
+                <label className="cursor-pointer bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded text-sm font-medium">
+                  {imagePreview ? 'Change Image' : 'Add Image'}
                   <input
                     type="file"
-                    ref={fileInputRef}
                     accept="image/*"
                     onChange={(e) => handleImageChange(e, false)}
                     className="hidden"
                   />
-                  {imagePreview ? 'Change Image' : 'Add Image'}
                 </label>
                 
                 <button
                   type="submit"
-                  disabled={(newPost.trim() === '' && !imageFile) || loading}
-                  className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-5 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={(newPost.trim() === '' && !imagePreview) || loading}
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {loading ? 'Posting...' : 'Post'}
                 </button>
@@ -316,23 +279,31 @@ const CommunityFeedPage = () => {
       ) : (
         <div className="space-y-6">
           {posts.map(post => (
-            <div key={post.id} className="bg-white rounded-2xl shadow-sm border border-gray-200 p-5">
+            <div key={post._id} className="bg-white rounded-2xl shadow-sm border border-gray-200 p-5">
               <div className="flex items-start space-x-3">
-                {post.profilePicture ? (
-                  <img 
-                    src={post.profilePicture} 
-                    alt={post.displayName} 
-                    className="w-10 h-10 rounded-full object-cover"
-                  />
-                ) : (
-                  <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 font-bold">
-                    {post.displayName?.[0]?.toUpperCase() || post.username?.[0]?.toUpperCase() || '?'}
-                  </div>
-                )}
+                <button 
+                  onClick={() => showUserProfile(post.userId)}
+                  className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 font-bold hover:opacity-75"
+                >
+                  {post.profilePicture ? (
+                    <img 
+                      src={post.profilePicture} 
+                      alt={post.displayName} 
+                      className="w-full h-full rounded-full object-cover"
+                    />
+                  ) : (
+                    post.displayName?.[0]?.toUpperCase() || post.username?.[0]?.toUpperCase() || '?'
+                  )}
+                </button>
                 
                 <div className="flex-1">
                   <div className="flex items-center space-x-2 mb-2">
-                    <span className="font-bold text-gray-900">{post.displayName}</span>
+                    <button 
+                      onClick={() => showUserProfile(post.userId)}
+                      className="font-bold text-gray-900 hover:underline"
+                    >
+                      {post.displayName}
+                    </button>
                     <span className="text-gray-500 text-sm">@{post.username}</span>
                     <span className="text-gray-400">·</span>
                     <span className="text-gray-500 text-sm">{formatTime(post.timestamp)}</span>
@@ -357,9 +328,9 @@ const CommunityFeedPage = () => {
                   
                   <div className="flex items-center space-x-4 mt-3">
                     <button
-                      onClick={() => likePost(post.id)}
+                      onClick={() => likePost(post._id)}
                       className={`flex items-center space-x-1 text-sm font-medium ${
-                        post.likedByCurrentUser 
+                        post.likedBy?.includes(user?.id) 
                           ? 'text-red-500' 
                           : 'text-gray-500 hover:text-red-500'
                       }`}
@@ -367,7 +338,7 @@ const CommunityFeedPage = () => {
                       <svg 
                         xmlns="http://www.w3.org/2000/svg" 
                         className="h-5 w-5" 
-                        fill={post.likedByCurrentUser ? "currentColor" : "none"} 
+                        fill={post.likedBy?.includes(user?.id) ? "currentColor" : "none"} 
                         viewBox="0 0 24 24" 
                         stroke="currentColor"
                       >
@@ -377,7 +348,7 @@ const CommunityFeedPage = () => {
                     </button>
                     
                     <button
-                      onClick={() => startReply(post.id, post.username)}
+                      onClick={() => startReply(post._id, post.username)}
                       className="text-gray-500 hover:text-blue-600 text-sm font-medium flex items-center space-x-1"
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -389,23 +360,26 @@ const CommunityFeedPage = () => {
 
                   {renderReplies(post.replies)}
 
-                  {replyingTo === post.id && (
+                  {replyingTo === post._id && (
                     <div className="mt-4 ml-8 pl-4 border-l-2 border-blue-200">
                       <div className="flex items-start space-x-2">
-                        {user.profilePicture ? (
-                          <img 
-                            src={user.profilePicture} 
-                            alt="You" 
-                            className="w-8 h-8 rounded-full object-cover"
-                          />
-                        ) : (
-                          <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-xs">
-                            {user.username?.[0]?.toUpperCase() || 'U'}
-                          </div>
-                        )}
+                        <button 
+                          onClick={() => showUserProfile(user.id)}
+                          className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-xs hover:opacity-75"
+                        >
+                          {user.profilePicture ? (
+                            <img 
+                              src={user.profilePicture} 
+                              alt="You" 
+                              className="w-full h-full rounded-full object-cover"
+                            />
+                          ) : (
+                            user.username?.[0]?.toUpperCase() || 'U'
+                          )}
+                        </button>
                         
                         <div className="flex-1">
-                          <form onSubmit={(e) => handleReplySubmit(post.id, e)} className="space-y-2">
+                          <form onSubmit={(e) => handleReplySubmit(post._id, e)} className="space-y-2">
                             <textarea
                               value={replyText}
                               onChange={(e) => setReplyText(e.target.value)}
@@ -423,8 +397,11 @@ const CommunityFeedPage = () => {
                                 />
                                 <button
                                   type="button"
-                                  onClick={() => removeImage(true)}
-                                  className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center hover:bg-red-600 text-xs"
+                                  onClick={() => {
+                                    setReplyImageFile(null);
+                                    setReplyImagePreview('');
+                                  }}
+                                  className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center hover:bg-red-600 text-[8px]"
                                 >
                                   ×
                                 </button>
@@ -433,28 +410,27 @@ const CommunityFeedPage = () => {
                             
                             <div className="flex justify-between items-center">
                               <label className="cursor-pointer bg-gray-100 hover:bg-gray-200 text-gray-600 px-2 py-1 rounded text-xs font-medium">
+                                {replyImagePreview ? 'Change' : 'Add Image'}
                                 <input
                                   type="file"
-                                  ref={replyFileInputRef}
                                   accept="image/*"
                                   onChange={(e) => handleImageChange(e, true)}
                                   className="hidden"
                                 />
-                                {replyImagePreview ? 'Change' : 'Add Image'}
                               </label>
                               
                               <div className="flex space-x-2">
                                 <button
                                   type="button"
                                   onClick={cancelReply}
-                                  className="text-gray-600 hover:text-gray-800 text-sm font-medium px-3 py-1"
+                                  className="text-gray-600 hover:text-gray-800 text-sm font-medium px-2 py-1"
                                 >
                                   Cancel
                                 </button>
                                 <button
                                   type="submit"
-                                  disabled={(replyText.trim() === '' && !replyImageFile)}
-                                  className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-3 py-1 rounded disabled:opacity-50"
+                                  disabled={(replyText.trim() === '' && !replyImagePreview)}
+                                  className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-2 py-1 rounded disabled:opacity-50"
                                 >
                                   Reply
                                 </button>
@@ -469,6 +445,103 @@ const CommunityFeedPage = () => {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {isProfileModalOpen && viewedUser && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex justify-between items-start mb-4">
+                <h2 className="text-xl font-bold">Profile</h2>
+                <button 
+                  onClick={closeProfileModal}
+                  className="text-gray-500 hover:text-gray-700 text-2xl"
+                >
+                  ×
+                </button>
+              </div>
+              
+              <div className="flex flex-col items-center mb-4">
+                {viewedUser.profilePicture ? (
+                  <img 
+                    src={viewedUser.profilePicture} 
+                    alt={viewedUser.displayName} 
+                    className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md"
+                  />
+                ) : (
+                  <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
+                    <span className="text-2xl font-bold">
+                      {viewedUser.displayName?.[0]?.toUpperCase() || '?'}
+                    </span>
+                  </div>
+                )}
+                
+                <h3 className="text-lg font-bold mt-3">{viewedUser.displayName}</h3>
+                <p className="text-gray-600">@{viewedUser.username}</p>
+              </div>
+              
+              {viewedUser.bio && (
+                <div className="mb-4">
+                  <h4 className="font-semibold text-gray-900 mb-1">About</h4>
+                  <p className="text-gray-700">{viewedUser.bio}</p>
+                </div>
+              )}
+              
+              {(viewedUser.socials?.website || viewedUser.socials?.instagram || viewedUser.socials?.linkedin) && (
+                <div className="mb-4">
+                  <h4 className="font-semibold text-gray-900 mb-2">Social Links</h4>
+                  <div className="space-y-1">
+                    {viewedUser.socials.website && (
+                      <a 
+                        href={viewedUser.socials.website} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:text-blue-800 block"
+                      >
+                        Website
+                      </a>
+                    )}
+                    {viewedUser.socials.instagram && (
+                      <a 
+                        href={`https://instagram.com/${viewedUser.socials.instagram.replace('@', '')}`} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:text-blue-800 block"
+                      >
+                        Instagram: {viewedUser.socials.instagram}
+                      </a>
+                    )}
+                    {viewedUser.socials.linkedin && (
+                      <a 
+                        href={viewedUser.socials.linkedin.startsWith('http') 
+                          ? viewedUser.socials.linkedin 
+                          : `https://linkedin.com/in/${viewedUser.socials.linkedin}`}
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:text-blue-800 block"
+                      >
+                        LinkedIn
+                      </a>
+                    )}
+                  </div>
+                </div>
+              )}
+              
+              <div className="text-sm text-gray-500">
+                Joined {new Date(viewedUser.createdAt).toLocaleDateString()}
+              </div>
+            </div>
+            
+            <div className="p-4 border-t border-gray-200">
+              <button
+                onClick={closeProfileModal}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-lg"
+              >
+                Close
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

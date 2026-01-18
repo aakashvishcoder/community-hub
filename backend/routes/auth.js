@@ -1,7 +1,7 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-
+const Profile = require('../models/Profile');
 const router = express.Router();
 
 router.post('/register', async (req, res) => {
@@ -105,6 +105,27 @@ router.get('/me', async (req, res) => {
 router.post('/logout', (req, res) => {
   try {
     res.json({ success: true, message: 'Logged out successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+router.get('/profile/:userId', async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId).select('-password');
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const profile = await Profile.findOne({ userId: req.params.userId });
+
+    const fullProfile = {
+      ...user.toObject(),
+      ...profile?.toObject()
+    };
+    
+    res.json(fullProfile);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });

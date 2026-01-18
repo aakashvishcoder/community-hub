@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useUser } from '../contexts/UserContext';
 import { Link, useNavigate } from 'react-router-dom';
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
@@ -6,6 +6,7 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 const ProfilePage = () => {
   const { user, saveUser, logout } = useUser();
   const navigate = useNavigate();
+  const fileInputRef = useRef(null);
   
   const [formData, setFormData] = useState({
     username: '',
@@ -40,6 +41,45 @@ const ProfilePage = () => {
     setSuccess('');
   };
 
+  const fileToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+    });
+  };
+
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (!file.type.startsWith('image/')) {
+        setError('Please select an image file (jpg, png, gif)');
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        setError('Image must be smaller than 5MB');
+        return;
+      }
+      
+      try {
+        const base64String = await fileToBase64(file);
+        setFormData(prev => ({ ...prev, profilePicture: base64String }));
+        setError('');
+      } catch (err) {
+        setError('Failed to process image');
+        console.error(err);
+      }
+    }
+  };
+
+  const removeImage = () => {
+    setFormData(prev => ({ ...prev, profilePicture: '' }));
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -59,7 +99,7 @@ const ProfilePage = () => {
           username: formData.username,
           displayName: formData.displayName,
           bio: formData.bio,
-          profilePicture: formData.profilePicture,
+          profilePicture: formData.profilePicture, 
           socials: {
             website: formData.website,
             instagram: formData.instagram,
@@ -143,7 +183,7 @@ const ProfilePage = () => {
             <div className="relative">
               {formData.profilePicture ? (
                 <img 
-                  src={formData.profilePicture} 
+                  src={formData.profilePicture}
                   alt="Profile" 
                   className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md"
                 />
@@ -154,15 +194,27 @@ const ProfilePage = () => {
                   </span>
                 </div>
               )}
+              {formData.profilePicture && (
+                <button
+                  type="button"
+                  onClick={removeImage}
+                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600"
+                >
+                  ×
+                </button>
+              )}
             </div>
-            <input
-              type="text"
-              name="profilePicture"
-              value={formData.profilePicture}
-              onChange={handleChange}
-              placeholder="Profile picture URL"
-              className="mt-3 w-full max-w-xs px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
+
+            <label className="mt-3 cursor-pointer bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-lg text-sm font-medium">
+              {formData.profilePicture ? 'Change Photo' : 'Upload Photo'}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="hidden"
+              />
+            </label>
           </div>
 
           <div>

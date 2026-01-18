@@ -172,6 +172,27 @@ export const UserProvider = ({ children }) => {
     loadPosts();
   }, []);
 
+  const [viewedUser, setViewedUser] = useState(null);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+
+  const showUserProfile = async (userId) => {
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/auth/profile/${userId}`);
+      if (response.ok) {
+        const userData = await response.json();
+        setViewedUser(userData);
+        setIsProfileModalOpen(true);
+      }
+    } catch (error) {
+      console.error('Failed to load user profile:', error);
+    }
+  };
+
+  const closeProfileModal = () => {
+    setIsProfileModalOpen(false);
+    setViewedUser(null);
+  };
+
   return (
     <UserContext.Provider 
       value={{ 
@@ -182,6 +203,10 @@ export const UserProvider = ({ children }) => {
         addPost,
         likePost,
         addReply, 
+        showUserProfile,
+        closeProfileModal,
+        viewedUser,
+        isProfileModalOpen
       }}
     >
       {children}

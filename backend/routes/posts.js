@@ -1,7 +1,7 @@
 const express = require('express');
 const Post = require('../models/Post');
 const User = require('../models/User');
-
+const Profile = require('../models/Profile');
 const router = express.Router();
 
 router.get('/', async (req, res) => {
@@ -27,10 +27,13 @@ router.post('/', async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
+    const profile = await Profile.findOne({ userId });
+
     const post = new Post({
       userId,
-      username: user.email.split('@')[0],
-      displayName: user.name,
+      username: profile?.username || user.email.split('@')[0],
+      displayName: profile?.displayName || user.name,
+      profilePicture: profile?.profilePicture || '',
       content: content || '',
       imageUrl: imageUrl || ''
     });
@@ -57,10 +60,13 @@ router.post('/:postId/reply', async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
+    const profile = await Profile.findOne({ userId });
+
     const reply = {
       userId,
-      username: user.email.split('@')[0],
-      displayName: user.name,
+      username: profile?.username || user.email.split('@')[0],
+      displayName: profile?.displayName || user.name,
+      profilePicture: profile?.profilePicture || '',
       content: content || '',
       imageUrl: imageUrl || ''
     };
