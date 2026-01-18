@@ -1,41 +1,66 @@
 const express = require('express');
-const router = express.Router();
 const Event = require('../models/Event');
+const User = require('../models/User');
+const Profile = require('../models/Profile');
+
+const router = express.Router();
 
 router.get('/', async (req, res) => {
   try {
-    const { category, search, limit = 20, skip = 0 } = req.query;
-    
+    const { search, category } = req.query;
     let filter = {};
-
+    
+    if (search) {
+      filter.$or = [
+        { title: { $regex: search, $options: 'i' } },
+        { description: { $regex: search, $options: 'i' } },
+        { location: { $regex: search, $options: 'i' } }
+      ];
+    }
+    
     if (category && category !== 'all') {
       filter.category = category;
     }
+    
+    const events = await Event.find(filter).sort({ date: 1 });
+    res.json(events);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
 
-    if (search) {
-      const searchTerm = new RegExp(search, 'i');
-      filter.$or = [
-        { title: searchTerm },
-        { description: searchTerm },
-        { location: searchTerm }
-      ];
+router.post('/', async (req, res) => {
+  try {
+    const { userId, title, date, time, location, description, category, image } = req.body;
+    
+    if (!userId || !title || !date || !time || !location || !description || !category) {
+      return res.status(400).json({ message: 'All fields are required' });
     }
 
-    filter.date = { $gte: new Date() };
-    
-    const events = await Event.find(filter)
-      .sort({ date: 1 })
-      .skip(parseInt(skip))
-      .limit(parseInt(limit));
-    
-    const total = await Event.countDocuments(filter);
-    
-    res.json({
-      events,
-      total,
-      page: Math.floor(skip / limit) + 1,
-      pages: Math.ceil(total / limit)
+    const user = await User.findById(userId).select('name email');
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const profile = await Profile.findOne({ userId });
+
+    const event = new Event({
+      title,
+      date: new Date(date),
+      time,
+      location,
+      description,
+      category,
+      image: image || '',
+      user: userId,
+      username: profile?.username || user.email.split('@')[0],
+      displayName: profile?.displayName || user.name,
+      profilePicture: profile?.profilePicture || ''
     });
+
+    await event.save();
+    res.status(201).json(event);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });
@@ -51,45 +76,6 @@ router.get('/:id', async (req, res) => {
     res.json(event);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server error' });
-  }
-});
-
-router.post('/', async (req, res) => {
-  try {
-    const { 
-      title, 
-      date, 
-      time, 
-      location, 
-      description, 
-      category, 
-      image,
-      user 
-    } = req.body;
-
-    if (!title || !date || !time || !location || !description || !category) {
-      return res.status(400).json({ message: 'All fields except image and user are required' });
-    }
-    
-    const event = new Event({
-      title,
-      date: new Date(date),
-      time,
-      location,
-      description,
-      category,
-      image,
-      user
-    });
-    
-    await event.save();
-    res.status(201).json(event);
-  } catch (error) {
-    console.error(error);
-    if (error.name === 'ValidationError') {
-      return res.status(400).json({ message: 'Invalid data provided' });
-    }
     res.status(500).json({ message: 'Server error' });
   }
 });

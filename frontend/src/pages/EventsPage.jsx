@@ -1,51 +1,94 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react';
+import { useUser } from '../contexts/UserContext';
 import FadeIn from '../components/FadeIn';
-
-const mockEvents = [
-  {
-    id: 1,
-    title: "McKinney Farmers Market",
-    date: "2026-01-25",
-    time: "8:00 AM - 1:00 PM",
-    location: "Historic Downtown Square",
-    description: "Fresh local produce, artisan goods, and live music every Saturday.",
-    category: "Market",
-    image: "/src/assets/event1.jpg"
-  },
-  {
-    id: 2,
-    title: "Community Clean-Up Day",
-    date: "2026-02-01",
-    time: "9:00 AM - 12:00 PM",
-    location: "Erwin Park",
-    description: "Join neighbors in beautifying our parks and green spaces. Gloves and bags provided!",
-    category: "Volunteer",
-    image: "/src/assets/event2.jpg"
-  },
-  {
-    id: 3,
-    title: "Youth Coding Workshop",
-    date: "2026-02-08",
-    time: "2:00 PM - 4:00 PM",
-    location: "McKinney Public Library",
-    description: "Free intro to programming for teens ages 13-18. Laptops provided.",
-    category: "Education",
-    image: "/src/assets/event3.jpg"
-  }
-]
+import EventModal from '../components/EventModal';
+import EventForm from '../components/EventForm';
 
 const EventsPage = () => {
+  const { user } = useUser();
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [showForm, setShowForm] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [error, setError] = useState('');
 
-  const categories = ['all', ...new Set(mockEvents.map(e => e.category))]
+  const categories = ['all', 'Market', 'Festival', 'Concert', 'Workshop', 'Community', 'Volunteer', 'Education', 'Other'];
 
-  const filteredEvents = mockEvents.filter(event => {
-    const matchesSearch = event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         event.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === 'all' || event.category === selectedCategory
-    return matchesSearch && matchesCategory;
-  })
+  const loadEvents = async () => {
+    try {
+      const params = new URLSearchParams();
+      if (searchTerm) params.append('search', searchTerm);
+      if (selectedCategory !== 'all') params.append('category', selectedCategory);
+      
+      const response = await fetch(`/api/events?${params.toString()}`);
+      if (response.ok) {
+        const eventsData = await response.json();
+        setEvents(eventsData);
+      }
+    } catch (error) {
+      console.error('Error loading events:', error);
+      setError('Failed to load events');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadEvents();
+  }, [searchTerm, selectedCategory]);
+
+  const handleCreateEvent = async (eventData) => {
+    if (!user) return;
+    
+    try {
+      const response = await fetch('/api/events', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          userId: user.id,
+          ...eventData
+        })
+      });
+      
+      if (response.ok) {
+        const newEvent = await response.json();
+        setEvents(prev => [newEvent, ...prev]);
+        setShowForm(false);
+        setError('');
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message || 'Failed to create event');
+      }
+    } catch (error) {
+      console.error('Error creating event:', error);
+      setError('Failed to create event');
+    }
+  };
+
+  const openEventDetails = async (eventId) => {
+    try {
+      const response = await fetch(`/api/events/${eventId}`);
+      if (response.ok) {
+        const eventData = await response.json();
+        setSelectedEvent(eventData);
+      }
+    } catch (error) {
+      console.error('Error loading event details:', error);
+    }
+  };
+
+  const closeEventDetails = () => {
+    setSelectedEvent(null);
+  };
+
+  const closeForm = () => {
+    setShowForm(false);
+    setError('');
+  };
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
@@ -83,29 +126,52 @@ const EventsPage = () => {
           </div>
           
           <div>
-            <button className="w-full bg-primary-500 hover:bg-primary-600 text-white font-medium py-2.5 rounded-lg">
+            <button 
+              onClick={() => setShowForm(true)}
+              className="w-full bg-primary-500 hover:bg-primary-600 text-white font-medium py-2.5 rounded-lg"
+            >
               Submit an Event
             </button>
           </div>
         </div>
       </div>
 
-      {filteredEvents.length === 0 ? (
+      {error && (
+        <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded">
+          <p className="text-red-700">{error}</p>
+        </div>
+      )}
+
+      {loading ? (
+        <div className="text-center py-12">
+          <div className="animate-pulse text-gray-500">Loading events...</div>
+        </div>
+      ) : events.length === 0 ? (
         <div className="text-center py-12">
           <div className="text-gray-400 mb-4">No events found</div>
           <p className="text-gray-600">Try adjusting your search or check back soon!</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-          {filteredEvents.map(event => (
-            <FadeIn key={event.id} delay={0}>
-              <div className="bg-white rounded-2xl overflow-hidden shadow-card hover:shadow-hover transition-shadow">
+          {events.map(event => (
+            <FadeIn key={event._id} delay={0}>
+              <div 
+                className="bg-white rounded-2xl overflow-hidden shadow-card hover:shadow-hover transition-shadow cursor-pointer"
+                onClick={() => openEventDetails(event._id)}
+              >
                 <div className="h-40 overflow-hidden">
-                  <div 
-                    className="w-full h-full bg-gray-200 bg-cover bg-center"
-                    style={{ backgroundImage: `url(${event.image})` }}
-                    onError={(e) => e.target.classList.add('bg-gray-200')}
-                  />
+                  {event.image ? (
+                    <img 
+                      src={event.image} 
+                      alt={event.title}
+                      className="w-full h-full object-cover"
+                      onError={(e) => e.target.classList.add('bg-gray-200')}
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                      <span className="text-gray-500">No Image</span>
+                    </div>
+                  )}
                 </div>
                 <div className="p-5">
                   <div className="flex justify-between items-start mb-2">
@@ -135,15 +201,32 @@ const EventsPage = () => {
                     {event.location}
                   </div>
                   
-                  <p className="text-gray-700 text-sm">{event.description}</p>
+                  <p className="text-gray-700 text-sm line-clamp-2">{event.description}</p>
                 </div>
               </div>
             </FadeIn>
           ))}
         </div>
       )}
+
+      {/* Event Details Modal */}
+      {selectedEvent && (
+        <EventModal 
+          event={selectedEvent} 
+          onClose={closeEventDetails} 
+        />
+      )}
+
+      {/* Event Form Modal */}
+      {showForm && (
+        <EventForm 
+          onSubmit={handleCreateEvent}
+          onCancel={closeForm}
+          error={error}
+        />
+      )}
     </div>
-  )
-}
+  );
+};
 
 export default EventsPage;
