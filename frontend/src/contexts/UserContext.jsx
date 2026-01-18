@@ -13,24 +13,38 @@ export const useUser = () => {
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [posts, setPosts] = useState([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const savedUser = localStorage.getItem('communityHubUser')
     if (savedUser) {
-      setUser(JSON.parse(savedUser))
+      try {
+        const parsedUser = JSON.parse(savedUser)
+        setUser(parsedUser)
+      } catch (e) {
+        console.error('Failed to parse user data')
+        localStorage.removeItem('communityHubUser')
+      }
     }
+    setLoading(false)
   }, [])
 
   useEffect(() => {
     const savedPosts = localStorage.getItem('communityHubPosts')
     if (savedPosts) {
-      setPosts(JSON.parse(savedPosts))
+      try {
+        setPosts(JSON.parse(savedPosts))
+      } catch (e) {
+        console.error('Failed to parse posts')
+      }
     }
   }, [])
 
   useEffect(() => {
     if (user !== null) {
       localStorage.setItem('communityHubUser', JSON.stringify(user))
+    } else {
+      localStorage.removeItem('communityHubUser')
     }
   }, [user])
 
@@ -43,12 +57,26 @@ export const UserProvider = ({ children }) => {
       ...userData,
       id: prevUser?.id || Date.now().toString(),
       joinedAt: prevUser?.joinedAt || new Date().toISOString()
-    }));
-  };
+    }))
+  }
 
-  const logout = () => {
+  const logout = async () => {
+    try {
+      await fetch('/api/auth/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+    } catch (error) {
+      console.error('Logout API call failed:', error);
+    }
+
     setUser(null)
+    setPosts([])
     localStorage.removeItem('communityHubUser')
+
+    localStorage.removeItem('communityHubPosts')
   }
 
   const addPost = (content) => {
@@ -93,7 +121,8 @@ export const UserProvider = ({ children }) => {
         logout,
         posts,
         addPost,
-        likePost
+        likePost,
+        loading
       }}
     >
       {children}

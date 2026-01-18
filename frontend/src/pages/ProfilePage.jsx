@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react'
-import { useUser } from '../contexts/UserContext'
-import { Link, useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react';
+import { useUser } from '../contexts/UserContext';
+import { Link, useNavigate } from 'react-router-dom';
 
 const ProfilePage = () => {
-  const { user, saveUser } = useUser()
-  const navigate = useNavigate()
+  const { user, saveUser, logout } = useUser();
+  const navigate = useNavigate();
   
   const [formData, setFormData] = useState({
     username: '',
@@ -14,7 +14,9 @@ const ProfilePage = () => {
     website: '',
     instagram: '',
     linkedin: ''
-  })
+  });
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   useEffect(() => {
     if (user) {
@@ -26,38 +28,77 @@ const ProfilePage = () => {
         website: user.socials?.website || '',
         instagram: user.socials?.instagram || '',
         linkedin: user.socials?.linkedin || ''
-      })
+      });
     }
-  }, [user])
+  }, [user]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
-  }
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    setError('');
+    setSuccess('');
+  };
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     
     if (!formData.username.trim()) {
-      alert('Username is required')
-      return
+      setError('Username is required');
+      return;
     }
 
-    saveUser({
-      ...user,
-      username: formData.username,
-      displayName: formData.displayName,
-      bio: formData.bio,
-      profilePicture: formData.profilePicture,
-      socials: {
-        website: formData.website,
-        instagram: formData.instagram,
-        linkedin: formData.linkedin
-      }
-    })
+    try {
+      saveUser({
+        ...user,
+        username: formData.username,
+        displayName: formData.displayName,
+        bio: formData.bio,
+        profilePicture: formData.profilePicture,
+        socials: {
+          website: formData.website,
+          instagram: formData.instagram,
+          linkedin: formData.linkedin
+        }
+      });
 
-    alert('Profile updated successfully!')
-  }
+      const response = await fetch('/api/profiles', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          userId: user.id,
+          username: formData.username,
+          displayName: formData.displayName,
+          bio: formData.bio,
+          profilePicture: formData.profilePicture,
+          socials: {
+            website: formData.website,
+            instagram: formData.instagram,
+            linkedin: formData.linkedin
+          }
+        })
+      });
+
+      if (response.ok) {
+        setSuccess('Profile updated successfully!');
+        setError('');
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message || 'Failed to update profile');
+      }
+    } catch (err) {
+      console.error('Profile update error:', err);
+      setError('An error occurred while updating your profile');
+    }
+  };
+
+  const handleLogout = async () => {
+    if (window.confirm('Are you sure you want to log out?')) {
+      await logout();
+      navigate('/');
+    }
+  };
 
   if (!user) {
     return (
@@ -70,14 +111,34 @@ const ProfilePage = () => {
           Go to Sign In
         </Link>
       </div>
-    )
+    );
   }
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       <div className="bg-white rounded-2xl shadow-card p-6 md:p-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">Edit Your Profile</h1>
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl font-bold text-gray-900">Edit Your Profile</h1>
+          <button
+            onClick={handleLogout}
+            className="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-colors text-sm"
+          >
+            Log Out
+          </button>
+        </div>
         
+        {error && (
+          <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded">
+            <p className="text-red-700">{error}</p>
+          </div>
+        )}
+        
+        {success && (
+          <div className="bg-green-50 border-l-4 border-green-500 p-4 mb-6 rounded">
+            <p className="text-green-700">{success}</p>
+          </div>
+        )}
+
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="flex flex-col items-center mb-6">
             <div className="relative">
@@ -89,7 +150,9 @@ const ProfilePage = () => {
                 />
               ) : (
                 <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
-                  No photo
+                  <span className="text-lg font-medium">
+                    {formData.displayName?.[0]?.toUpperCase() || formData.username?.[0]?.toUpperCase() || 'U'}
+                  </span>
                 </div>
               )}
             </div>
@@ -99,7 +162,7 @@ const ProfilePage = () => {
               value={formData.profilePicture}
               onChange={handleChange}
               placeholder="Profile picture URL"
-              className="mt-3 w-full max-w-xs px-3 py-2 border border-gray-300 rounded-lg"
+              className="mt-3 w-full max-w-xs px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
 
@@ -112,7 +175,7 @@ const ProfilePage = () => {
               name="username"
               value={formData.username}
               onChange={handleChange}
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               placeholder="e.g., @mckinney_neighbor"
               required
             />
@@ -127,7 +190,7 @@ const ProfilePage = () => {
               name="displayName"
               value={formData.displayName}
               onChange={handleChange}
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               placeholder="Your real name or nickname"
             />
           </div>
@@ -141,7 +204,7 @@ const ProfilePage = () => {
               value={formData.bio}
               onChange={handleChange}
               rows="3"
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               placeholder="Tell us about yourself..."
             />
           </div>
@@ -156,7 +219,7 @@ const ProfilePage = () => {
                 name="website"
                 value={formData.website}
                 onChange={handleChange}
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="https://example.com"
               />
             </div>
@@ -170,7 +233,7 @@ const ProfilePage = () => {
                 name="instagram"
                 value={formData.instagram}
                 onChange={handleChange}
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="@username"
               />
             </div>
@@ -184,22 +247,22 @@ const ProfilePage = () => {
                 name="linkedin"
                 value={formData.linkedin}
                 onChange={handleChange}
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="linkedin.com/in/..."
               />
             </div>
           </div>
 
-          <div className="flex gap-4 pt-4">
+          <div className="flex flex-col sm:flex-row gap-4 pt-4">
             <button
               type="submit"
-              className="bg-primary-500 hover:bg-primary-600 text-white font-semibold py-2.5 px-6 rounded-lg transition-colors"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-6 rounded-lg transition-colors flex-1"
             >
               Save Profile
             </button>
             <Link
               to="/community"
-              className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2.5 px-6 rounded-lg transition-colors"
+              className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2.5 px-6 rounded-lg transition-colors text-center flex-1"
             >
               Cancel
             </Link>
@@ -207,7 +270,7 @@ const ProfilePage = () => {
         </form>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ProfilePage
+export default ProfilePage;

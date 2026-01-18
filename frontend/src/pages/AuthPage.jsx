@@ -1,38 +1,72 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useUser } from '../contexts/UserContext'; 
+import { useUser } from '../contexts/UserContext';
 
 const AuthPage = () => {
   const [activeTab, setActiveTab] = useState('login');
   const [formData, setFormData] = useState({ email: '', password: '', name: '' });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
-  const { saveUser } = useUser(); 
+  const { saveUser } = useUser();
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setError('');
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError('');
 
-    const mockUser = {
-      email: formData.email,
-      username: formData.email.split('@')[0],
-      displayName: activeTab === 'signup' ? formData.name : formData.email.split('@')[0],
-      profilePicture: '',
-      bio: '',
-      socials: {}
-    };
-    
-    saveUser(mockUser); 
+    try {
+      let response;
+      
+      if (activeTab === 'signup') {
+        response = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            email: formData.email,
+            password: formData.password
+          })
+        });
+      } else {
+        response = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            email: formData.email,
+            password: formData.password
+          })
+        });
+      }
 
-    if (activeTab === 'signup') {
-      navigate('/profile');
-    } else {
-      navigate('/');
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Authentication failed');
+      }
+
+      saveUser({
+        id: data.user._id, 
+        email: data.user.email,
+        token: data.token,
+        username: data.user.email.split('@')[0],
+        displayName: activeTab === 'signup' ? formData.name : data.user.email.split('@')[0]
+      });
+
+      navigate(activeTab === 'signup' ? '/profile' : '/');
+    } catch (err) {
+      setError(err.message);
+      console.error('Auth error:', err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -48,6 +82,12 @@ const AuthPage = () => {
             : 'Create an account to get started'}
         </p>
       </div>
+
+      {error && (
+        <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+          <p className="text-red-700">{error}</p>
+        </div>
+      )}
 
       <div className="flex border-b border-gray-200 mb-8">
         <button
@@ -124,19 +164,12 @@ const AuthPage = () => {
           />
         </div>
 
-        {activeTab === 'login' && (
-          <div className="text-right">
-            <a href="#" className="text-sm text-blue-600 hover:text-blue-800">
-              Forgot password?
-            </a>
-          </div>
-        )}
-
         <button
           type="submit"
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg shadow-md hover:shadow-lg transition-colors"
+          disabled={loading}
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg shadow-md hover:shadow-lg transition-colors disabled:opacity-50"
         >
-          {activeTab === 'login' ? 'Sign In' : 'Create Account'}
+          {loading ? 'Processing...' : (activeTab === 'login' ? 'Sign In' : 'Create Account')}
         </button>
       </form>
 
