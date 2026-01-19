@@ -72,17 +72,14 @@ const PlacesPage = () => {
         if (Array.isArray(placesData) && placesData.length > 0) {
           setPlaces(placesData);
         } else {
-          // Use mock data if backend returns empty
           filterMockPlaces(category);
         }
       } else {
-        // Use mock data if backend fails
         filterMockPlaces(category);
       }
     } catch (error) {
       console.error('Error loading places:', error);
       setError('Failed to load places');
-      // Use mock data on error
       filterMockPlaces(getActiveCategory());
     } finally {
       setLoading(false);
@@ -93,7 +90,6 @@ const PlacesPage = () => {
     if (category === 'all') {
       setPlaces(mockPlaces);
     } else {
-      // Map URL category to mock type
       const categoryMap = {
         'Education': 'Library',
         'Health': 'Community Center', 
@@ -266,7 +262,7 @@ const PlacesPage = () => {
                       target="_blank" 
                       rel="noopener noreferrer"
                       className="inline-flex items-center text-primary-600 hover:text-primary-800 text-sm font-medium"
-                      onClick={(e) => e.stopPropagation()} // Prevent card click when clicking link
+                      onClick={(e) => e.stopPropagation()}
                     >
                       Visit Website
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -281,7 +277,6 @@ const PlacesPage = () => {
         </div>
       )}
 
-      {/* Place Details Modal */}
       {selectedPlace && (
         <div 
           className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"

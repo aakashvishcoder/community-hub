@@ -10,6 +10,7 @@ import PlacesPage from './pages/PlacesPage'
 import NewsPage from './pages/NewsPage'; 
 import WeatherPage from './pages/WeatherPage';
 import FunFactsPage from './pages/FunFactsPage';
+import SourcesPage from './pages/SourcesPage'
 import { UserProvider } from './contexts/UserContext'
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
               <Route path="/news" element={<NewsPage />} />
               <Route path="/weather" element={<WeatherPage />} />
               <Route path="/funfacts" element={<FunFactsPage />} />
+              <Route path="/sources" element={<SourcesPage />} />
             </Routes>
           </main>
           <Footer />
