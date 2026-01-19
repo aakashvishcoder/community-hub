@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useUser } from '../contexts/UserContext';
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
 const AuthPage = () => {
   const [activeTab, setActiveTab] = useState('login');
   const [formData, setFormData] = useState({ email: '', password: '', name: '' });
@@ -24,7 +24,7 @@ const AuthPage = () => {
       let response;
       
       if (activeTab === 'signup') {
-        response = await fetch(`${BACKEND_URL}/api/auth/register`, {
+        response = await fetch('/api/auth/register', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -36,7 +36,7 @@ const AuthPage = () => {
           })
         });
       } else {
-        response = await fetch(`${BACKEND_URL}/api/auth/login`, {
+        response = await fetch('/api/auth/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -54,13 +54,23 @@ const AuthPage = () => {
         throw new Error(data.message || 'Authentication failed');
       }
 
+      const profileResponse = await fetch(`/api/auth/profile/${data.user._id}`);
+      let fullProfile = data.user;
+      
+      if (profileResponse.ok) {
+        const profileData = await profileResponse.json();
+        fullProfile = { ...data.user, ...profileData };
+      }
+
       saveUser({
-        id: data.user._id,
-        email: data.user.email,
-        name: data.user.name,
-        token: data.token,
-        username: data.user.email.split('@')[0],
-        displayName: data.user.name
+        id: fullProfile._id,
+        email: fullProfile.email,
+        name: fullProfile.name,
+        username: fullProfile.username || fullProfile.email.split('@')[0],
+        displayName: fullProfile.displayName || fullProfile.name,
+        bio: fullProfile.bio || '',
+        profilePicture: fullProfile.profilePicture || '',
+        socials: fullProfile.socials || {}
       });
 
       navigate(activeTab === 'signup' ? '/profile' : '/');

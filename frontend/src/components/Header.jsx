@@ -1,16 +1,28 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useUser } from '../contexts/UserContext'; 
+import { useState } from 'react';
 
 const Header = () => {
   const location = useLocation();
   const { user } = useUser(); 
   const isAuthPage = location.pathname === '/auth';
+  const [isPlacesHovered, setIsPlacesHovered] = useState(false);
 
   const navItems = [
     { name: 'Home', path: '/' },
     { name: 'Community', path: '/community' },
-    { name: 'Events', path: '/events' },
-    { name: 'Places', path: '/places' }
+    { name: 'Events', path: '/events' }
+  ];
+
+  const placesCategories = [
+    { name: 'All Places', path: '/places' },
+    { name: 'Education', path: '/places?category=Education' },
+    { name: 'Health', path: '/places?category=Health' },
+    { name: 'Food', path: '/places?category=Food' },
+    { name: 'Parks', path: '/places?category=Park' },
+    { name: 'Libraries', path: '/places?category=Library' },
+    { name: 'Museums', path: '/places?category=Museum' },
+    { name: 'Community Centers', path: '/places?category=Community Center' }
   ];
 
   return (
@@ -44,6 +56,39 @@ const Header = () => {
                       </Link>
                     </li>
                   ))}
+                  
+                  {/* Places dropdown */}
+                  <li 
+                    className="relative"
+                    onMouseEnter={() => setIsPlacesHovered(true)}
+                    onMouseLeave={() => setIsPlacesHovered(false)}
+                  >
+                    <Link
+                      to="/places"
+                      className={`px-3 py-2 rounded-lg font-medium transition-colors ${
+                        location.pathname === '/places'
+                          ? 'bg-blue-100 text-blue-700'
+                          : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50'
+                      }`}
+                    >
+                      Places
+                    </Link>
+                    
+                    {isPlacesHovered && (
+                      <div className="absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                        {placesCategories.map((category) => (
+                          <Link
+                            key={category.path}
+                            to={category.path}
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                            onClick={() => setIsPlacesHovered(false)}
+                          >
+                            {category.name}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </li>
                 </ul>
               </nav>
 

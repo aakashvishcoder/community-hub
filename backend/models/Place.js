@@ -9,7 +9,8 @@ const PlaceSchema = new mongoose.Schema({
   type: {
     type: String,
     required: true,
-    enum: ['Park', 'Library', 'Museum', 'Community Center', 'Other']
+    trim: true,
+    enum: ['Education', 'Health', 'Food', 'Park', 'Library', 'Museum', 'Community Center', 'Other']
   },
   address: {
     type: String,
