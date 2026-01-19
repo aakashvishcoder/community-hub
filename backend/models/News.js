@@ -6,10 +6,15 @@ const NewsSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
+  date: {
+    type: Date,
+    required: true
+  },
   category: {
     type: String,
     required: true,
-    enum: ['Community', 'Events', 'Resources', 'Education', 'Other']
+    trim: true,
+    enum: ['Community', 'Resources', 'Education', 'Events', 'Announcements', 'Other']
   },
   excerpt: {
     type: String,
@@ -28,6 +33,22 @@ const NewsSchema = new mongoose.Schema({
   featured: {
     type: Boolean,
     default: false
+  },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  username: {
+    type: String,
+    required: true
+  },
+  displayName: {
+    type: String,
+    required: true
+  },
+  profilePicture: {
+    type: String
   }
 }, {
   timestamps: true
