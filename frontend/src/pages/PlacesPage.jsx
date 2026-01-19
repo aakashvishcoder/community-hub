@@ -11,6 +11,7 @@ const PlacesPage = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   const mockPlaces = [
     {
@@ -65,7 +66,7 @@ const PlacesPage = () => {
       const category = getActiveCategory();
       const params = category !== 'all' ? `?category=${category}` : '';
       
-      const response = await fetch(`/api/places${params}`);
+      const response = await fetch(`${BACKEND_URL}/api/places${params}`);
       
       if (response.ok) {
         const placesData = await response.json();
@@ -112,7 +113,7 @@ const PlacesPage = () => {
 
   const handleCreatePlace = async (placeData) => {
     try {
-      const response = await fetch('/api/places', {
+      const response = await fetch(`${BACKEND_URL}/api/places`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

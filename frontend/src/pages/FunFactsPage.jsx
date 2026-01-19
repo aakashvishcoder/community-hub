@@ -10,7 +10,7 @@ const FunFactsPage = () => {
   const [currentFactIndex, setCurrentFactIndex] = useState(0);
   const [showForm, setShowForm] = useState(false);
   const [error, setError] = useState('');
-
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
   const exampleFacts = [
     {
       _id: '1',
@@ -64,7 +64,7 @@ const FunFactsPage = () => {
 
   const loadFacts = async () => {
     try {
-      const response = await fetch('/api/funfacts');
+      const response = await fetch(`${BACKEND_URL}/api/funfacts`);
       if (response.ok) {
         const factsData = await response.json();
         if (Array.isArray(factsData) && factsData.length > 0) {
@@ -92,7 +92,7 @@ const FunFactsPage = () => {
     if (!user) return;
     
     try {
-      const response = await fetch('/api/funfacts', {
+      const response = await fetch(`${BACKEND_URL}/api/funfacts`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

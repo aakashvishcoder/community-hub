@@ -9,6 +9,7 @@ const AuthPage = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const { saveUser } = useUser();
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -24,7 +25,7 @@ const AuthPage = () => {
       let response;
       
       if (activeTab === 'signup') {
-        response = await fetch('/api/auth/register', {
+        response = await fetch(`${BACKEND_URL}/api/auth/register`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -36,7 +37,7 @@ const AuthPage = () => {
           })
         });
       } else {
-        response = await fetch('/api/auth/login', {
+        response = await fetch(`${BACKEND_URL}/api/auth/login`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -54,7 +55,7 @@ const AuthPage = () => {
         throw new Error(data.message || 'Authentication failed');
       }
 
-      const profileResponse = await fetch(`/api/auth/profile/${data.user._id}`);
+      const profileResponse = await fetch(`${BACKEND_URL}/api/auth/profile/${data.user._id}`);
       let fullProfile = data.user;
       
       if (profileResponse.ok) {

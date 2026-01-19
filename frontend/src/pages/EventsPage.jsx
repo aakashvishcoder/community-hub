@@ -15,14 +15,14 @@ const EventsPage = () => {
   const [error, setError] = useState('');
 
   const categories = ['all', 'Market', 'Festival', 'Concert', 'Workshop', 'Community', 'Volunteer', 'Education', 'Other'];
-
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
   const loadEvents = async () => {
     try {
       const params = new URLSearchParams();
       if (searchTerm) params.append('search', searchTerm);
       if (selectedCategory !== 'all') params.append('category', selectedCategory);
       
-      const response = await fetch(`/api/events?${params.toString()}`);
+      const response = await fetch(`${BACKEND_URL}/api/events?${params.toString()}`);
       if (response.ok) {
         const eventsData = await response.json();
         setEvents(eventsData);
@@ -43,7 +43,7 @@ const EventsPage = () => {
     if (!user) return;
     
     try {
-      const response = await fetch('/api/events', {
+      const response = await fetch(`${BACKEND_URL}/api/events`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -71,7 +71,7 @@ const EventsPage = () => {
 
   const openEventDetails = async (eventId) => {
     try {
-      const response = await fetch(`/api/events/${eventId}`);
+      const response = await fetch(`${BACKEND_URL}/api/events/${eventId}`);
       if (response.ok) {
         const eventData = await response.json();
         setSelectedEvent(eventData);

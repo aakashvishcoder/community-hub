@@ -4,7 +4,7 @@ const WeatherPage = () => {
   const [weather, setWeather] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-
+  
   useEffect(() => {
     const fetchWeather = async () => {
       try {

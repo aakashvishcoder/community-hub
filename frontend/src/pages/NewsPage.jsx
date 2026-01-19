@@ -13,7 +13,7 @@ const NewsPage = () => {
   const [showForm, setShowForm] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [error, setError] = useState('');
-
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
   const categories = ['all', 'Community', 'Resources', 'Education', 'Events', 'Announcements', 'Other'];
 
   const loadNews = async () => {
@@ -22,7 +22,7 @@ const NewsPage = () => {
       if (searchTerm) params.append('search', searchTerm);
       if (selectedCategory !== 'all') params.append('category', selectedCategory);
       
-      const response = await fetch(`/api/news?${params.toString()}`);
+      const response = await fetch(`${BACKEND_URL}/api/news?${params.toString()}`);
       
       if (response.ok) {
         const newsData = await response.json();
@@ -51,7 +51,7 @@ const NewsPage = () => {
     if (!user) return;
     
     try {
-      const response = await fetch('/api/news', {
+      const response = await fetch(`${BACKEND_URL}/api/news`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -79,7 +79,7 @@ const NewsPage = () => {
 
   const openNewsDetails = async (newsId) => {
     try {
-      const response = await fetch(`/api/news/${newsId}`);
+      const response = await fetch(`${BACKEND_URL}/api/news/${newsId}`);
       if (response.ok) {
         const newsData = await response.json();
         setSelectedArticle(newsData);

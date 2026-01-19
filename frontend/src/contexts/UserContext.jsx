@@ -14,7 +14,7 @@ export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [posts, setPosts] = useState([])
   const [loading, setLoading] = useState(true)
-
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
   useEffect(() => {
     const savedUser = localStorage.getItem('communityHubUser')
     if (savedUser) {
@@ -23,7 +23,7 @@ export const UserProvider = ({ children }) => {
         
         const loadProfile = async () => {
           try {
-            const response = await fetch('/api/auth/profile/' + parsedUser.id);
+            const response = await fetch(`${BACKEND_URL}/api/auth/profile/` + parsedUser.id);
             if (response.ok) {
               const profileData = await response.json();
               const fullUser = { ...parsedUser, ...profileData };
@@ -75,7 +75,7 @@ export const UserProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await fetch('/api/auth/logout', {
+      await fetch(`${BACKEND_URL}/api/auth/logout`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -95,7 +95,7 @@ export const UserProvider = ({ children }) => {
     if (!user) return;
     
     try {
-      const response = await fetch('/api/posts', {
+      const response = await fetch(`${BACKEND_URL}/api/posts`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -120,7 +120,7 @@ export const UserProvider = ({ children }) => {
     if (!user) return;
     
     try {
-      const response = await fetch(`/api/posts/${postId}/reply`, {
+      const response = await fetch(`${BACKEND_URL}/api/posts/${postId}/reply`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -149,7 +149,7 @@ export const UserProvider = ({ children }) => {
     if (!user) return;
     
     try {
-      const response = await fetch(`/api/posts/${postId}/like`, {
+      const response = await fetch(`${BACKEND_URL}/api/posts/${postId}/like`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -175,7 +175,7 @@ export const UserProvider = ({ children }) => {
   useEffect(() => {
     const loadPosts = async () => {
       try {
-        const response = await fetch('/api/posts');
+        const response = await fetch(`${BACKEND_URL}/api/posts`);
         if (response.ok) {
           const postsData = await response.json();
           setPosts(postsData);
@@ -193,7 +193,7 @@ export const UserProvider = ({ children }) => {
 
   const showUserProfile = async (userId) => {
     try {
-      const response = await fetch(`/api/auth/profile/${userId}`);
+      const response = await fetch(`${BACKEND_URL}/api/auth/profile/${userId}`);
       if (response.ok) {
         const userData = await response.json();
         setViewedUser(userData);

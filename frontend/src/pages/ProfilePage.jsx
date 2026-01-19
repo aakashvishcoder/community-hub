@@ -7,7 +7,7 @@ const ProfilePage = () => {
   const { user, saveUser, logout } = useUser();
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
-  
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
   const [formData, setFormData] = useState({
     username: '',
     displayName: '',
