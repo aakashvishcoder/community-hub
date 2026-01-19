@@ -209,7 +209,6 @@ const EventsPage = () => {
         </div>
       )}
 
-      {/* Event Details Modal */}
       {selectedEvent && (
         <EventModal 
           event={selectedEvent} 
@@ -217,7 +216,6 @@ const EventsPage = () => {
         />
       )}
 
-      {/* Event Form Modal */}
       {showForm && (
         <EventForm 
           onSubmit={handleCreateEvent}

@@ -17,6 +17,7 @@ app.use('/api/places', require('./routes/places'));
 app.use('/api/news', require('./routes/news'));
 app.use('/api/events', require('./routes/events'));
 app.use('/api/posts', require('./routes/posts')); 
+app.use('/api/funfacts', require('./routes/funfacts'));
 
 app.get('/', (req, res) => {
   res.json({ message: 'Community Resource Hub API' });

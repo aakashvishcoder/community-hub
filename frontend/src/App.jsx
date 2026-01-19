@@ -8,6 +8,8 @@ import CommunityFeedPage from './pages/CommunityFeedPage'
 import EventsPage from './pages/EventsPage'
 import PlacesPage from './pages/PlacesPage'
 import NewsPage from './pages/NewsPage'; 
+import WeatherPage from './pages/WeatherPage';
+import FunFactsPage from './pages/FunFactsPage';
 import { UserProvider } from './contexts/UserContext'
 
 function App() {
@@ -25,6 +27,8 @@ function App() {
               <Route path="/events" element={<EventsPage />} />
               <Route path="/places" element={<PlacesPage />} />
               <Route path="/news" element={<NewsPage />} />
+              <Route path="/weather" element={<WeatherPage />} />
+              <Route path="/funfacts" element={<FunFactsPage />} />
             </Routes>
           </main>
           <Footer />

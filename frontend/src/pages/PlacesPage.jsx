@@ -7,12 +7,11 @@ const PlacesPage = () => {
   const [places, setPlaces] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
-  const [selectedPlace, setSelectedPlace] = useState(null); // For expanded view
+  const [selectedPlace, setSelectedPlace] = useState(null); 
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Mock test data - will be used if backend returns empty
   const mockPlaces = [
     {
       _id: '1',
