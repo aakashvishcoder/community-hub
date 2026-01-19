@@ -11,7 +11,10 @@ const Header = () => {
   const navItems = [
     { name: 'Home', path: '/' },
     { name: 'Community', path: '/community' },
-    { name: 'Events', path: '/events' }
+    { name: 'Events', path: '/events' },
+    { name: 'News', path: '/news' },
+    { name: 'Weather', path: '/weather' },
+    { name: 'Fun Facts', path: '/funfacts' }
   ];
 
   const placesCategories = [
@@ -57,7 +60,6 @@ const Header = () => {
                     </li>
                   ))}
                   
-                  {/* Places dropdown */}
                   <li 
                     className="relative"
                     onMouseEnter={() => setIsPlacesHovered(true)}
