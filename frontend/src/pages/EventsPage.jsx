@@ -15,7 +15,8 @@ const EventsPage = () => {
   const [error, setError] = useState('');
 
   const categories = ['all', 'Market', 'Festival', 'Concert', 'Workshop', 'Community', 'Volunteer', 'Education', 'Other'];
-  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || '';
+
   const loadEvents = async () => {
     try {
       const params = new URLSearchParams();

@@ -9,7 +9,6 @@ const WeatherPage = () => {
     const fetchWeather = async () => {
       try {
         const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
-        console.log(API_KEY)
         const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=McKinney,TX,US&appid=${API_KEY}&units=imperial`);
         if (!response.ok) {
           throw new Error('Failed to fetch weather data');

@@ -9,7 +9,7 @@ const AuthPage = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const { saveUser } = useUser();
-  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || '';
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });

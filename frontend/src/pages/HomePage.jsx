@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom'
-import FadeIn from '../components/FadeIn'
+import { Link } from 'react-router-dom';
+import FadeIn from '../components/FadeIn';
 
 const HomePage = () => {
   return (
@@ -130,7 +130,7 @@ const HomePage = () => {
         </div>
       </FadeIn>
     </div>
-  )
-}
+  );
+};
 
-export default HomePage
+export default HomePage;

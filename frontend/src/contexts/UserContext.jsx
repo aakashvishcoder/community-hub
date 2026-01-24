@@ -1,29 +1,30 @@
-import { createContext, useContext, useState, useEffect } from 'react'
+import { createContext, useContext, useState, useEffect } from 'react';
 
-const UserContext = createContext()
+const UserContext = createContext();
 
 export const useUser = () => {
-  const context = useContext(UserContext)
+  const context = useContext(UserContext);
   if (!context) {
-    throw new Error('useUser must be used within a UserProvider')
+    throw new Error('useUser must be used within a UserProvider');
   }
-  return context
-}
+  return context;
+};
 
 export const UserProvider = ({ children }) => {
-  const [user, setUser] = useState(null)
-  const [posts, setPosts] = useState([])
-  const [loading, setLoading] = useState(true)
-  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+  const [user, setUser] = useState(null);
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || '';
+
   useEffect(() => {
-    const savedUser = localStorage.getItem('communityHubUser')
+    const savedUser = localStorage.getItem('communityHubUser');
     if (savedUser) {
       try {
         const parsedUser = JSON.parse(savedUser);
-        
+
         const loadProfile = async () => {
           try {
-            const response = await fetch(`${BACKEND_URL}/api/auth/profile/` + parsedUser.id);
+            const response = await fetch(`${BACKEND_URL}/api/auth/profile/${parsedUser.id}`);
             if (response.ok) {
               const profileData = await response.json();
               const fullUser = { ...parsedUser, ...profileData };
@@ -36,42 +37,42 @@ export const UserProvider = ({ children }) => {
             setUser(parsedUser);
           }
         };
-        
+
         loadProfile();
       } catch (e) {
-        console.error('Failed to parse user data')
-        localStorage.removeItem('communityHubUser')
+        console.error('Failed to parse user data');
+        localStorage.removeItem('communityHubUser');
       }
     }
-    setLoading(false)
-  }, [])
+    setLoading(false);
+  }, []);
 
   useEffect(() => {
-    const savedPosts = localStorage.getItem('communityHubPosts')
+    const savedPosts = localStorage.getItem('communityHubPosts');
     if (savedPosts) {
       try {
-        setPosts(JSON.parse(savedPosts))
+        setPosts(JSON.parse(savedPosts));
       } catch (e) {
-        console.error('Failed to parse posts')
+        console.error('Failed to parse posts');
       }
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (user !== null) {
-      localStorage.setItem('communityHubUser', JSON.stringify(user))
+      localStorage.setItem('communityHubUser', JSON.stringify(user));
     } else {
-      localStorage.removeItem('communityHubUser')
+      localStorage.removeItem('communityHubUser');
     }
-  }, [user])
+  }, [user]);
 
   useEffect(() => {
-    localStorage.setItem('communityHubPosts', JSON.stringify(posts))
-  }, [posts])
+    localStorage.setItem('communityHubPosts', JSON.stringify(posts));
+  }, [posts]);
 
   const saveUser = (userData) => {
     setUser(userData);
-  }
+  };
 
   const logout = async () => {
     try {
@@ -85,15 +86,15 @@ export const UserProvider = ({ children }) => {
       console.error('Logout API call failed:', error);
     }
 
-    setUser(null)
-    setPosts([])
-    localStorage.removeItem('communityHubUser')
-    localStorage.removeItem('communityHubPosts')
-  }
+    setUser(null);
+    setPosts([]);
+    localStorage.removeItem('communityHubUser');
+    localStorage.removeItem('communityHubPosts');
+  };
 
   const addPost = async (postData) => {
     if (!user) return;
-    
+
     try {
       const response = await fetch(`${BACKEND_URL}/api/posts`, {
         method: 'POST',
@@ -106,10 +107,10 @@ export const UserProvider = ({ children }) => {
           imageUrl: postData.imageUrl || ''
         })
       });
-      
+
       if (response.ok) {
         const newPost = await response.json();
-        setPosts(prev => [newPost, ...prev]);
+        setPosts((prev) => [newPost, ...prev]);
       }
     } catch (error) {
       console.error('Error adding post:', error);
@@ -118,7 +119,7 @@ export const UserProvider = ({ children }) => {
 
   const addReply = async (postId, replyData) => {
     if (!user) return;
-    
+
     try {
       const response = await fetch(`${BACKEND_URL}/api/posts/${postId}/reply`, {
         method: 'POST',
@@ -131,13 +132,11 @@ export const UserProvider = ({ children }) => {
           imageUrl: replyData.imageUrl || ''
         })
       });
-      
+
       if (response.ok) {
         const updatedPost = await response.json();
-        setPosts(prev => 
-          prev.map(post => 
-            post._id === postId ? updatedPost : post
-          )
+        setPosts((prev) =>
+          prev.map((post) => (post._id === postId ? updatedPost : post))
         );
       }
     } catch (error) {
@@ -147,7 +146,7 @@ export const UserProvider = ({ children }) => {
 
   const likePost = async (postId) => {
     if (!user) return;
-    
+
     try {
       const response = await fetch(`${BACKEND_URL}/api/posts/${postId}/like`, {
         method: 'POST',
@@ -158,13 +157,11 @@ export const UserProvider = ({ children }) => {
           userId: user.id
         })
       });
-      
+
       if (response.ok) {
         const updatedPost = await response.json();
-        setPosts(prev => 
-          prev.map(post => 
-            post._id === postId ? updatedPost : post
-          )
+        setPosts((prev) =>
+          prev.map((post) => (post._id === postId ? updatedPost : post))
         );
       }
     } catch (error) {
@@ -184,7 +181,7 @@ export const UserProvider = ({ children }) => {
         console.error('Error loading posts:', error);
       }
     };
-    
+
     loadPosts();
   }, []);
 
@@ -210,22 +207,23 @@ export const UserProvider = ({ children }) => {
   };
 
   return (
-    <UserContext.Provider 
-      value={{ 
-        user, 
-        saveUser, 
+    <UserContext.Provider
+      value={{
+        user,
+        saveUser,
         logout,
         posts,
         addPost,
         likePost,
-        addReply, 
+        addReply,
         showUserProfile,
         closeProfileModal,
         viewedUser,
-        isProfileModalOpen
+        isProfileModalOpen,
+        loading
       }}
     >
       {children}
     </UserContext.Provider>
-  )
-}
+  );
+};

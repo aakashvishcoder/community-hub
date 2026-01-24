@@ -13,7 +13,7 @@ const NewsPage = () => {
   const [showForm, setShowForm] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [error, setError] = useState('');
-  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || '';
   const categories = ['all', 'Community', 'Resources', 'Education', 'Events', 'Announcements', 'Other'];
 
   const loadNews = async () => {
