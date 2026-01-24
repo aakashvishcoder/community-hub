@@ -195,7 +195,7 @@ const CommunityFeedPage = () => {
           <div className="flex items-start space-x-3">
             <button 
               onClick={() => showUserProfile(user.id)}
-              className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold hover:opacity-75"
+              className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold hover:opacity-75"
             >
               {user.profilePicture ? (
                 <img 
@@ -213,7 +213,7 @@ const CommunityFeedPage = () => {
                 value={newPost}
                 onChange={(e) => setNewPost(e.target.value)}
                 placeholder={`What's on your mind, ${user.displayName || user.username || 'friend'}?`}
-                className="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                className="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent resize-none"
                 rows="3"
               />
               
@@ -251,7 +251,7 @@ const CommunityFeedPage = () => {
                 <button
                   type="submit"
                   disabled={(newPost.trim() === '' && !imagePreview) || loading}
-                  className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 px-4 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {loading ? 'Posting...' : 'Post'}
                 </button>
@@ -349,7 +349,7 @@ const CommunityFeedPage = () => {
                     
                     <button
                       onClick={() => startReply(post._id, post.username)}
-                      className="text-gray-500 hover:text-blue-600 text-sm font-medium flex items-center space-x-1"
+                      className="text-gray-500 hover:text-emerald-600 text-sm font-medium flex items-center space-x-1"
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
@@ -361,11 +361,11 @@ const CommunityFeedPage = () => {
                   {renderReplies(post.replies)}
 
                   {replyingTo === post._id && (
-                    <div className="mt-4 ml-8 pl-4 border-l-2 border-blue-200">
+                    <div className="mt-4 ml-8 pl-4 border-l-2 border-emerald-200">
                       <div className="flex items-start space-x-2">
                         <button 
                           onClick={() => showUserProfile(user.id)}
-                          className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-xs hover:opacity-75"
+                          className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold text-xs hover:opacity-75"
                         >
                           {user.profilePicture ? (
                             <img 
@@ -384,7 +384,7 @@ const CommunityFeedPage = () => {
                               value={replyText}
                               onChange={(e) => setReplyText(e.target.value)}
                               placeholder="Write a reply..."
-                              className="w-full p-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                              className="w-full p-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent resize-none"
                               rows="2"
                             />
                             
@@ -430,7 +430,7 @@ const CommunityFeedPage = () => {
                                 <button
                                   type="submit"
                                   disabled={(replyText.trim() === '' && !replyImagePreview)}
-                                  className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-2 py-1 rounded disabled:opacity-50"
+                                  className="bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium px-2 py-1 rounded disabled:opacity-50"
                                 >
                                   Reply
                                 </button>
@@ -497,7 +497,7 @@ const CommunityFeedPage = () => {
                         href={viewedUser.socials.website} 
                         target="_blank" 
                         rel="noopener noreferrer"
-                        className="text-blue-600 hover:text-blue-800 block"
+                        className="text-emerald-600 hover:text-emerald-800 block"
                       >
                         Website
                       </a>
@@ -507,7 +507,7 @@ const CommunityFeedPage = () => {
                         href={`https://instagram.com/${viewedUser.socials.instagram.replace('@', '')}`} 
                         target="_blank" 
                         rel="noopener noreferrer"
-                        className="text-blue-600 hover:text-blue-800 block"
+                        className="text-emerald-600 hover:text-emerald-800 block"
                       >
                         Instagram: {viewedUser.socials.instagram}
                       </a>
@@ -519,7 +519,7 @@ const CommunityFeedPage = () => {
                           : `https://linkedin.com/in/${viewedUser.socials.linkedin}`}
                         target="_blank" 
                         rel="noopener noreferrer"
-                        className="text-blue-600 hover:text-blue-800 block"
+                        className="text-emerald-600 hover:text-emerald-800 block"
                       >
                         LinkedIn
                       </a>
@@ -536,7 +536,7 @@ const CommunityFeedPage = () => {
             <div className="p-4 border-t border-gray-200">
               <button
                 onClick={closeProfileModal}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-lg"
+                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 rounded-lg"
               >
                 Close
               </button>

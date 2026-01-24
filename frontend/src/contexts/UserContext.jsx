@@ -24,17 +24,23 @@ export const UserProvider = ({ children }) => {
 
         const loadProfile = async () => {
           try {
-            const response = await fetch(`${BACKEND_URL}/api/auth/profile/${parsedUser.id}`);
+            const response = await fetch(`${BACKEND_URL}/api/auth/profile/${parsedUser._id || parsedUser.id}`);
             if (response.ok) {
               const profileData = await response.json();
-              const fullUser = { ...parsedUser, ...profileData };
+              const fullUser = { 
+                ...parsedUser, 
+                ...profileData,
+                id: profileData._id || parsedUser._id || parsedUser.id
+              };
               setUser(fullUser);
             } else {
-              setUser(parsedUser);
+              const safeUser = { ...parsedUser, id: parsedUser._id || parsedUser.id };
+              setUser(safeUser);
             }
           } catch (error) {
             console.error('Failed to load profile:', error);
-            setUser(parsedUser);
+            const safeUser = { ...parsedUser, id: parsedUser._id || parsedUser.id };
+            setUser(safeUser);
           }
         };
 
@@ -102,7 +108,7 @@ export const UserProvider = ({ children }) => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          userId: user.id,
+          userId: user._id || user.id,
           content: postData.content || '',
           imageUrl: postData.imageUrl || ''
         })
@@ -127,7 +133,7 @@ export const UserProvider = ({ children }) => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          userId: user.id,
+          userId: user._id || user.id,
           content: replyData.content || '',
           imageUrl: replyData.imageUrl || ''
         })
@@ -154,7 +160,7 @@ export const UserProvider = ({ children }) => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          userId: user.id
+          userId: user._id || user.id
         })
       });
 
