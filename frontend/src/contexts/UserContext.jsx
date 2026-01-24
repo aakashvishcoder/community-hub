@@ -24,23 +24,32 @@ export const UserProvider = ({ children }) => {
 
         const loadProfile = async () => {
           try {
-            const response = await fetch(`${BACKEND_URL}/api/auth/profile/${parsedUser._id || parsedUser.id}`);
+            const userId = parsedUser._id || parsedUser.id;
+            if (!userId) {
+              throw new Error('No valid user ID');
+            }
+            
+            const response = await fetch(`${BACKEND_URL}/api/auth/profile/${userId}`);
             if (response.ok) {
               const profileData = await response.json();
               const fullUser = { 
                 ...parsedUser, 
                 ...profileData,
-                id: profileData._id || parsedUser._id || parsedUser.id
+                _id: profileData._id || userId,
+                id: profileData._id || userId
               };
               setUser(fullUser);
             } else {
-              const safeUser = { ...parsedUser, id: parsedUser._id || parsedUser.id };
+              const safeUser = { 
+                ...parsedUser, 
+                _id: userId,
+                id: userId 
+              };
               setUser(safeUser);
             }
           } catch (error) {
             console.error('Failed to load profile:', error);
-            const safeUser = { ...parsedUser, id: parsedUser._id || parsedUser.id };
-            setUser(safeUser);
+            localStorage.removeItem('communityHubUser');
           }
         };
 
@@ -77,7 +86,12 @@ export const UserProvider = ({ children }) => {
   }, [posts]);
 
   const saveUser = (userData) => {
-    setUser(userData);
+    const safeUser = {
+      ...userData,
+      _id: userData._id || userData.id,
+      id: userData._id || userData.id
+    };
+    setUser(safeUser);
   };
 
   const logout = async () => {
@@ -102,15 +116,21 @@ export const UserProvider = ({ children }) => {
     if (!user) return;
 
     try {
+      const userId = user._id || user.id;
+      if (!userId) {
+        console.error('No valid user ID found');
+        return;
+      }
+
       const response = await fetch(`${BACKEND_URL}/api/posts`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          userId: user._id || user.id,
+          userId: userId,
           content: postData.content || '',
-          imageUrl: postData.imageUrl || ''
+          imageUrl: (postData.imageUrl || '').trim()
         })
       });
 
@@ -127,15 +147,21 @@ export const UserProvider = ({ children }) => {
     if (!user) return;
 
     try {
+      const userId = user._id || user.id;
+      if (!userId) {
+        console.error('No valid user ID found');
+        return;
+      }
+
       const response = await fetch(`${BACKEND_URL}/api/posts/${postId}/reply`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          userId: user._id || user.id,
+          userId: userId,
           content: replyData.content || '',
-          imageUrl: replyData.imageUrl || ''
+          imageUrl: (replyData.imageUrl || '').trim()
         })
       });
 
@@ -154,13 +180,19 @@ export const UserProvider = ({ children }) => {
     if (!user) return;
 
     try {
+      const userId = user._id || user.id;
+      if (!userId) {
+        console.error('No valid user ID found');
+        return;
+      }
+
       const response = await fetch(`${BACKEND_URL}/api/posts/${postId}/like`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          userId: user._id || user.id
+          userId: userId
         })
       });
 
