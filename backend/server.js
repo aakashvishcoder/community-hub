@@ -5,7 +5,7 @@ console.log('MONGO_URI exists:', !!process.env.MONGO_URI);
 const app = express();
 
 app.use(cors({
-  origin: ['http://localhost:5173', 'https://community-hub-o2l4.vercel.app']
+  origin: ['http://localhost:5173', 'https://community-hub-nine-topaz.vercel.app', 'https://community-hub-o2l4.vercel.app']
 }));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
