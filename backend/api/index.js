@@ -1,3 +1,33 @@
-const app = require('../server');
+const express = require('express');
+const cors = require('cors');
+const connectDB = require('../config/db');
+
+const app = express();
+
+connectDB().catch(console.error);
+
+app.use(cors({
+  origin: [
+    'http://localhost:5173',
+    'https://community-hub-nine-topaz.vercel.app',
+    'https://community-hub-o2l4.vercel.app'
+  ]
+}));
+
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true }));
+
+// Routes
+app.use('/api/auth', require('../routes/auth'));
+app.use('/api/profiles', require('../routes/profiles'));
+app.use('/api/places', require('../routes/places'));
+app.use('/api/news', require('../routes/news'));
+app.use('/api/events', require('../routes/events'));
+app.use('/api/posts', require('../routes/posts'));
+app.use('/api/funfacts', require('../routes/funfacts'));
+
+app.get('/', (req, res) => {
+  res.json({ message: 'Community Resource Hub API' });
+});
 
 module.exports = app;

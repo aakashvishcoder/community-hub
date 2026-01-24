@@ -1,17 +1,24 @@
 const Footer = () => {
-    return (
-        <footer className="bg-gray-50 border-t border-gray-200 py-8 mt-16">
-            <div className="container mx-auto px-4 text-center text-gray-600 text-sm">
-                <p>© {new Date().getFullYear()} Community Resource Hub. All rights reserved.</p>
-                <p className="mt-2">Made with care for Texas TSA.</p>
-                <p className="mt-2">
-                    <a href="/sources" className="text-blue-600 hover:text-blue-800 hover:underline">
-                        References/Sources
-                    </a>
-                </p>
-            </div>
-        </footer>
-    );
+  return (
+    <footer className="bg-[#fafaf7] border-t border-slate-200 py-16 mt-24">
+      <div className="max-w-6xl mx-auto px-6 text-center text-slate-600 text-sm space-y-3">
+        <p className="font-libre text-slate-900 text-base">
+          © {new Date().getFullYear()} Community Resource Hub
+        </p>
+        <p>
+          Built with care for Texas TSA
+        </p>
+        <p>
+          <a
+            href="/sources"
+            className="text-emerald-700 hover:text-emerald-800 underline-offset-4 hover:underline"
+          >
+            References & Sources
+          </a>
+        </p>
+      </div>
+    </footer>
+  );
 };
 
 export default Footer;

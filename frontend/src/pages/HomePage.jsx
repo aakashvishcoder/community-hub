@@ -3,132 +3,122 @@ import FadeIn from '../components/FadeIn';
 
 const HomePage = () => {
   return (
-    <div className="overflow-hidden">
-      <div className="relative bg-gradient-to-br from-primary-50 via-white to-accent-50 pt-16 pb-24 md:pt-24 md:pb-32">
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <FadeIn delay={0.1}>
-              <div className="inline-block bg-primary-100 text-primary-800 px-4 py-1.5 rounded-full mb-6 font-medium">
-                Welcome to Your Community Hub
-              </div>
-            </FadeIn>
-            
-            <FadeIn delay={0.2} y={30}>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6">
-                Where Neighbors <span className="text-accent-500">Connect</span>, <span className="text-secondary-500">Support</span>, and <span className="text-primary-500">Grow</span>
-              </h1>
-            </FadeIn>
-            
-            <FadeIn delay={0.3} y={20}>
-              <p className="text-xl text-gray-700 mb-10 max-w-3xl mx-auto leading-relaxed">
-                Discover local resources, share opportunities, and build a stronger, more connected McKinney—together.
-              </p>
-            </FadeIn>
-            
-            <FadeIn delay={0.4} y={10}>
-              <div className="flex flex-col sm:flex-row justify-center gap-4">
-                <Link
-                  to="/auth"
-                  className="bg-accent-500 hover:bg-accent-600 text-black font-semibold py-3.5 px-8 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5"
-                >
-                  Join Our Community
-                </Link>
-                <Link
-                  to="#explore"
-                  className="bg-white text-gray-800 hover:bg-gray-50 font-semibold py-3.5 px-8 rounded-xl border border-gray-200 hover:border-gray-300 transition-colors duration-300"
-                >
-                  Explore Resources
-                </Link>
-              </div>
-            </FadeIn>
-          </div>
-        </div>
-      </div>
-
-      <FadeIn delay={0.1} y={20}>
-        <div className="bg-white py-12 border-y border-gray-100">
-          <div className="container mx-auto px-4">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-              {[
-                { value: "250+", label: "Local Resources" },
-                { value: "12K+", label: "Residents Served" },
-                { value: "85+", label: "Partner Organizations" },
-                { value: "100%", label: "Community Driven" }
-              ].map((stat, i) => (
-                <FadeIn key={i} delay={0.2 + i * 0.1} y={15}>
-                  <div className="p-4">
-                    <div className="text-3xl md:text-4xl font-bold text-primary-600 mb-1">{stat.value}</div>
-                    <div className="text-gray-600">{stat.label}</div>
-                  </div>
-                </FadeIn>
-              ))}
+    <div className="min-h-screen bg-[#fafaf7] text-slate-800 font-inter">
+      <section className="pt-32 pb-28">
+        <div className="max-w-5xl mx-auto px-6 text-center">
+          <FadeIn>
+            <h1 className="font-libre text-4xl md:text-5xl lg:text-6xl text-slate-900 leading-tight mb-8">
+              Learning From Nature,<br />Building Community
+            </h1>
+            <p className="text-lg text-slate-600 max-w-3xl mx-auto leading-relaxed mb-12">
+              A living library of local knowledge, resources, and relationships—rooted in place, guided by care, and grown together.
+            </p>
+            <div className="flex flex-col sm:flex-row justify-center gap-5">
+              <Link
+                to="/auth"
+                className="px-8 py-4 bg-emerald-700 text-white font-medium rounded-md hover:bg-emerald-800 transition"
+              >
+                Join the Community
+              </Link>
+              <Link
+                to="#explore"
+                className="px-8 py-4 border border-slate-300 text-slate-700 rounded-md hover:bg-slate-100 transition"
+              >
+                Explore the Library
+              </Link>
             </div>
+          </FadeIn>
+        </div>
+      </section>
+
+      <section className="py-24">
+        <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+          <FadeIn>
+            <img
+              src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1400&q=80"
+              alt="Nature landscape"
+              className="w-full h-[420px] object-cover rounded-md"
+            />
+          </FadeIn>
+          <FadeIn>
+            <h2 className="font-libre text-3xl md:text-4xl text-slate-900 mb-6">
+              Nature Offers Blueprints
+            </h2>
+            <p className="text-slate-600 text-lg leading-relaxed mb-6">
+              Thriving ecosystems are resilient, diverse, and deeply interconnected. Communities work the same way.
+            </p>
+            <p className="text-slate-600 leading-relaxed mb-8">
+              This platform gathers local knowledge, programs, and opportunities so neighbors can learn from one another and grow stronger together.
+            </p>
+            <Link
+              to="/places"
+              className="text-emerald-700 font-medium hover:text-emerald-800"
+            >
+              Explore Local Places →
+            </Link>
+          </FadeIn>
+        </div>
+      </section>
+
+      <section id="explore" className="py-28 bg-white">
+        <div className="max-w-6xl mx-auto px-6">
+          <FadeIn className="mb-20 max-w-3xl">
+            <h2 className="font-libre text-3xl md:text-4xl text-slate-900 mb-6">
+              How the Commons Works
+            </h2>
+            <p className="text-slate-600 text-lg leading-relaxed">
+              A simple framework designed to surface what already exists—and make it accessible to everyone.
+            </p>
+          </FadeIn>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-14">
+            {[
+              {
+                title: "Discover",
+                text: "Browse verified local resources spanning food, housing, education, healthcare, and civic life."
+              },
+              {
+                title: "Contribute",
+                text: "Share organizations, initiatives, and knowledge that have helped you or your neighbors."
+              },
+              {
+                title: "Connect",
+                text: "Stay informed about events, volunteer needs, and opportunities to participate locally."
+              }
+            ].map((item, i) => (
+              <FadeIn key={i} delay={0.15 * i}>
+                <div>
+                  <h3 className="font-libre text-xl text-slate-900 mb-4">
+                    {item.title}
+                  </h3>
+                  <p className="text-slate-600 leading-relaxed">
+                    {item.text}
+                  </p>
+                </div>
+              </FadeIn>
+            ))}
           </div>
         </div>
-      </FadeIn>
+      </section>
 
-      <div className="container mx-auto px-4 py-16" id="explore">
-        <FadeIn className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">How Our Community Hub Works</h2>
-          <p className="text-gray-600">
-            Simple, transparent, and built by and for your community.
-          </p>
-        </FadeIn>
-        
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {[
-            {
-              title: "Find What You Need",
-              iconBg: "bg-primary-100",
-              iconColor: "text-primary-600",
-              desc: "Search verified resources for food, housing, healthcare, education, and more—all in one place."
-            },
-            {
-              title: "Share With Care",
-              iconBg: "bg-secondary-100",
-              iconColor: "text-secondary-600",
-              desc: "Know a great local program? Submit it to help others discover support and opportunities."
-            },
-            {
-              title: "Stay in the Loop",
-              iconBg: "bg-accent-100",
-              iconColor: "text-accent-600",
-              desc: "Get notified about events, volunteer needs, and community initiatives that matter to you."
-            }
-          ].map((step, i) => (
-            <FadeIn 
-              key={i} 
-              delay={0.2 + i * 0.2}
-              className="bg-white rounded-2xl p-7 shadow-card hover:shadow-hover transition-shadow duration-300 border border-gray-50"
-            >
-              <div className={`w-14 h-14 ${step.iconBg} ${step.iconColor} rounded-2xl flex items-center justify-center mb-6 font-bold text-xl`}>
-                {i + 1}
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">{step.title}</h3>
-              <p className="text-gray-600 leading-relaxed">{step.desc}</p>
-            </FadeIn>
-          ))}
-        </div>
-      </div>
-
-      <FadeIn delay={0.2} y={20}>
-        <div className="bg-gradient-to-r from-primary-500 to-secondary-500 py-16">
-          <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Ready to Make contribute?
+      <section className="py-28">
+        <div className="max-w-5xl mx-auto px-6 text-center">
+          <FadeIn>
+            <h2 className="font-libre text-3xl md:text-4xl text-slate-900 mb-8">
+              A Community Is a Living System
             </h2>
-            <p className="text-primary-100 max-w-2xl mx-auto mb-8 text-lg">
-              Join Us.
+            <p className="text-slate-600 text-lg leading-relaxed mb-12">
+              Like forests, prairies, and watersheds, strong communities grow through care, shared knowledge, and mutual support.
             </p>
             <Link
               to="/auth"
-              className="inline-block bg-white text-primary-700 hover:bg-gray-100 font-bold py-3.5 px-8 rounded-xl shadow-lg transition-all hover:scale-[1.02]"
+              className="inline-block px-10 py-4 bg-slate-900 text-white font-medium rounded-md hover:bg-slate-800 transition"
             >
-              Create Your Free Account
+              Create a Free Account
             </Link>
-          </div>
+          </FadeIn>
         </div>
-      </FadeIn>
+      </section>
     </div>
   );
 };
