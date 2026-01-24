@@ -11,13 +11,13 @@ app.use(cors({
     'http://localhost:5173',
     'https://community-hub-nine-topaz.vercel.app',
     'https://community-hub-o2l4.vercel.app'
-  ]
+  ],
+  credentials: true
 }));
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// Routes
 app.use('/api/auth', require('../routes/auth'));
 app.use('/api/profiles', require('../routes/profiles'));
 app.use('/api/places', require('../routes/places'));
