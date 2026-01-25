@@ -2,7 +2,6 @@ const express = require('express');
 const cors = require('cors');
 const connectDB = require('../config/db');
 
-// Connect DB immediately
 connectDB().catch(console.error);
 
 const app = express();

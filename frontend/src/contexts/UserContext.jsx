@@ -15,6 +15,7 @@ export const UserProvider = ({ children }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || '';
+  console.log('BACKEND_URL =', import.meta.env.VITE_BACKEND_URL)
 
   useEffect(() => {
     const savedUser = localStorage.getItem('communityHubUser');
