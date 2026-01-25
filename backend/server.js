@@ -30,4 +30,7 @@ app.get('/', (req, res) => {
   res.json({ message: 'Community Resource Hub API' });
 });
 
-module.exports = app;
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
