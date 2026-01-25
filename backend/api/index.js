@@ -2,16 +2,15 @@ const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/db');
 
-connectDB().catch(console.error);
-
 const app = express();
 
+connectDB().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});
+
 app.use(cors({
-  origin: [
-    'http://localhost:5173',
-    'https://community-hub-nine-topaz.vercel.app',
-    'https://community-hub-o2l4.vercel.app'
-  ],
+  origin: true,
   credentials: true
 }));
 
@@ -27,10 +26,11 @@ app.use('/api/posts', require('./routes/posts'));
 app.use('/api/funfacts', require('./routes/funfacts'));
 
 app.get('/', (req, res) => {
-  res.json({ message: 'Community Resource Hub API' });
+  res.status(200).json({ message: 'Community Resource Hub API running' });
 });
 
 const PORT = process.env.PORT || 5000;
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
