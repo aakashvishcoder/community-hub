@@ -85,132 +85,145 @@ const AuthPage = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-12 max-w-md">
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+    <div className="min-h-screen bg-[#f7f8f5] flex items-center justify-center px-4 py-16 font-inter">
+  <div className="relative w-full max-w-md">
+
+    {/* Soft blurred background behind card */}
+    <div className="absolute -inset-6 bg-[#e4ede2] rounded-3xl blur-2xl opacity-70" />
+
+    {/* Card container */}
+    <div className="relative bg-white rounded-3xl shadow-lg px-8 py-10">
+
+      {/* Header */}
+      <div className="text-center mb-10">
+        <h1 className="font-libre text-3xl text-slate-900 mb-3">
           {activeTab === 'login' ? 'Welcome Back' : 'Join Our Community'}
         </h1>
-        <p className="text-gray-600">
-          {activeTab === 'login' 
-            ? 'Sign in to access your community resources' 
+        <p className="text-slate-600 leading-relaxed">
+          {activeTab === 'login'
+            ? 'Sign in to access your community resources'
             : 'Create an account to get started'}
         </p>
       </div>
 
+      {/* Error */}
       {error && (
-        <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
-          <p className="text-red-700">{error}</p>
+        <div className="bg-red-50 border border-red-200 text-red-700 rounded-xl px-4 py-3 mb-6 text-sm">
+          {error}
         </div>
       )}
 
-      <div className="flex border-b border-gray-200 mb-8">
+      {/* Tabs */}
+      <div className="flex justify-center gap-8 mb-10 border-b border-slate-200">
         <button
-          className={`py-2 px-4 font-medium text-sm ${
-            activeTab === 'login'
-              ? 'text-blue-600 border-b-2 border-blue-600'
-              : 'text-gray-500 hover:text-gray-700'
-          }`}
           onClick={() => setActiveTab('login')}
+          className={`pb-2 text-sm font-medium transition ${
+            activeTab === 'login'
+              ? 'text-[#5f7c65] border-b-2 border-[#5f7c65]'
+              : 'text-slate-400 hover:text-slate-600'
+          }`}
         >
           Sign In
         </button>
         <button
-          className={`py-2 px-4 font-medium text-sm ${
-            activeTab === 'signup'
-              ? 'text-blue-600 border-b-2 border-blue-600'
-              : 'text-gray-500 hover:text-gray-700'
-          }`}
           onClick={() => setActiveTab('signup')}
+          className={`pb-2 text-sm font-medium transition ${
+            activeTab === 'signup'
+              ? 'text-[#5f7c65] border-b-2 border-[#5f7c65]'
+              : 'text-slate-400 hover:text-slate-600'
+          }`}
         >
           Create Account
         </button>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-5">
+      {/* Form */}
+      <form onSubmit={handleSubmit} className="space-y-6">
+
         {activeTab === 'signup' && (
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-              Full Name
-            </label>
+            <label className="block text-sm text-slate-700 mb-1">Full Name</label>
             <input
               type="text"
-              id="name"
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               placeholder="John Doe"
-              required={activeTab === 'signup'}
+              required
+              className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-[#a8c1af]"
             />
           </div>
         )}
 
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-            Email Address
-          </label>
+          <label className="block text-sm text-slate-700 mb-1">Email Address</label>
           <input
             type="email"
-            id="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
-            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             placeholder="you@example.com"
             required
+            className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-[#a8c1af]"
           />
         </div>
 
         <div>
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-            Password
-          </label>
+          <label className="block text-sm text-slate-700 mb-1">Password</label>
           <input
             type="password"
-            id="password"
             name="password"
             value={formData.password}
             onChange={handleChange}
-            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             placeholder="••••••••"
-            minLength="6"
             required
+            minLength={6}
+            className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-[#a8c1af]"
           />
         </div>
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg shadow-md hover:shadow-lg transition-colors disabled:opacity-50"
+          className="w-full mt-4 bg-[#5f7c65] hover:bg-[#4f6a55] text-white font-medium py-3 rounded-full shadow-md transition disabled:opacity-50"
         >
-          {loading ? 'Processing...' : (activeTab === 'login' ? 'Sign In' : 'Create Account')}
+          {loading
+            ? 'Processing...'
+            : activeTab === 'login'
+              ? 'Sign In'
+              : 'Create Account'}
         </button>
       </form>
 
-      <div className="mt-6 text-center text-sm text-gray-600">
+      {/* Footer */}
+      <div className="mt-8 text-center text-sm text-slate-600">
         {activeTab === 'login' ? (
           <>
-            Don't have an account?{' '}
-            <button 
+            New here?{' '}
+            <button
               onClick={() => setActiveTab('signup')}
-              className="text-blue-600 hover:text-blue-800 font-medium"
+              className="text-[#5f7c65] font-medium hover:underline"
             >
-              Sign up
+              Create an account
             </button>
           </>
         ) : (
           <>
-            Already have an account?{' '}
-            <button 
+            Already a member?{' '}
+            <button
               onClick={() => setActiveTab('login')}
-              className="text-blue-600 hover:text-blue-800 font-medium"
+              className="text-[#5f7c65] font-medium hover:underline"
             >
               Sign in
             </button>
           </>
         )}
       </div>
+
     </div>
+  </div>
+</div>
+
   );
 };
 
