@@ -14,53 +14,83 @@ export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || '';
-  console.log('BACKEND_URL =', import.meta.env.VITE_BACKEND_URL)
+  const BACKEND_URL = 'http://localhost:5000';
+
+  const validateUserExists = async (userId) => {
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/auth/validate/${userId}`);
+      return response.ok;
+    } catch (error) {
+      console.error('Error validating user:', error);
+      return false;
+    }
+  };
+
+  const normalizeUser = (userData) => {
+    if (!userData) return null;
+    const userId = userData._id || userData.id;
+    if (!userId) {
+      console.warn('User data missing _id or id:', userData);
+      return null;
+    }
+    return {
+      ...userData,
+      _id: userId,
+      id: userId
+    };
+  };
 
   useEffect(() => {
-    const savedUser = localStorage.getItem('communityHubUser');
-    if (savedUser) {
-      try {
-        const parsedUser = JSON.parse(savedUser);
+    const loadCachedUser = async () => {
+      const savedUser = localStorage.getItem('communityHubUser');
+      if (savedUser) {
+        try {
+          const parsedUser = JSON.parse(savedUser);
+          const normalizedUser = normalizeUser(parsedUser);
+          
+          if (!normalizedUser) {
+            localStorage.removeItem('communityHubUser');
+            localStorage.removeItem('communityHubPosts');
+            setLoading(false);
+            return;
+          }
 
-        const loadProfile = async () => {
+          const exists = await validateUserExists(normalizedUser._id);
+          if (!exists) {
+            console.warn('Cached user no longer exists in database. Clearing localStorage.');
+            localStorage.removeItem('communityHubUser');
+            localStorage.removeItem('communityHubPosts');
+            setUser(null);
+            setLoading(false);
+            return;
+          }
+
           try {
-            const userId = parsedUser._id || parsedUser.id;
-            if (!userId) {
-              throw new Error('No valid user ID');
-            }
-            
-            const response = await fetch(`${BACKEND_URL}/api/auth/profile/${userId}`);
+            const response = await fetch(`${BACKEND_URL}/api/auth/profile/${normalizedUser._id}`);
             if (response.ok) {
               const profileData = await response.json();
-              const fullUser = { 
-                ...parsedUser, 
-                ...profileData,
-                _id: profileData._id || userId,
-                id: profileData._id || userId
-              };
+              const fullUser = normalizeUser({ ...normalizedUser, ...profileData });
               setUser(fullUser);
+            } else if (response.status === 404) {
+              localStorage.removeItem('communityHubUser');
+              localStorage.removeItem('communityHubPosts');
+              setUser(null);
             } else {
-              const safeUser = { 
-                ...parsedUser, 
-                _id: userId,
-                id: userId 
-              };
-              setUser(safeUser);
+              setUser(normalizedUser);
             }
           } catch (error) {
             console.error('Failed to load profile:', error);
-            localStorage.removeItem('communityHubUser');
+            setUser(normalizedUser);
           }
-        };
-
-        loadProfile();
-      } catch (e) {
-        console.error('Failed to parse user data');
-        localStorage.removeItem('communityHubUser');
+        } catch (e) {
+          console.error('Failed to parse user data:', e);
+          localStorage.removeItem('communityHubUser');
+        }
       }
-    }
-    setLoading(false);
+      setLoading(false);
+    };
+
+    loadCachedUser();
   }, []);
 
   useEffect(() => {
@@ -87,12 +117,12 @@ export const UserProvider = ({ children }) => {
   }, [posts]);
 
   const saveUser = (userData) => {
-    const safeUser = {
-      ...userData,
-      _id: userData._id || userData.id,
-      id: userData._id || userData.id
-    };
-    setUser(safeUser);
+    const normalizedUser = normalizeUser(userData);
+    if (normalizedUser) {
+      setUser(normalizedUser);
+    } else {
+      console.error('Invalid user data provided to saveUser:', userData);
+    }
   };
 
   const logout = async () => {
@@ -114,15 +144,13 @@ export const UserProvider = ({ children }) => {
   };
 
   const addPost = async (postData) => {
-    if (!user) return;
+    if (!user) {
+      console.error('User not valid for posting');
+      return;
+    }
 
     try {
       const userId = user._id || user.id;
-      if (!userId) {
-        console.error('No valid user ID found');
-        return;
-      }
-
       const response = await fetch(`${BACKEND_URL}/api/posts`, {
         method: 'POST',
         headers: {
@@ -138,6 +166,12 @@ export const UserProvider = ({ children }) => {
       if (response.ok) {
         const newPost = await response.json();
         setPosts((prev) => [newPost, ...prev]);
+      } else if (response.status === 404) {
+        console.error('User not found on backend');
+        setUser(null);
+        localStorage.removeItem('communityHubUser');
+      } else {
+        console.error('Failed to add post:', response.statusText);
       }
     } catch (error) {
       console.error('Error adding post:', error);
@@ -145,15 +179,13 @@ export const UserProvider = ({ children }) => {
   };
 
   const addReply = async (postId, replyData) => {
-    if (!user) return;
+    if (!user) {
+      console.error('User not valid for replying');
+      return;
+    }
 
     try {
       const userId = user._id || user.id;
-      if (!userId) {
-        console.error('No valid user ID found');
-        return;
-      }
-
       const response = await fetch(`${BACKEND_URL}/api/posts/${postId}/reply`, {
         method: 'POST',
         headers: {
@@ -171,6 +203,10 @@ export const UserProvider = ({ children }) => {
         setPosts((prev) =>
           prev.map((post) => (post._id === postId ? updatedPost : post))
         );
+      } else if (response.status === 404) {
+        console.error('User or post not found');
+        setUser(null);
+        localStorage.removeItem('communityHubUser');
       }
     } catch (error) {
       console.error('Error adding reply:', error);
@@ -178,15 +214,13 @@ export const UserProvider = ({ children }) => {
   };
 
   const likePost = async (postId) => {
-    if (!user) return;
+    if (!user) {
+      console.error('User not valid for liking');
+      return;
+    }
 
     try {
       const userId = user._id || user.id;
-      if (!userId) {
-        console.error('No valid user ID found');
-        return;
-      }
-
       const response = await fetch(`${BACKEND_URL}/api/posts/${postId}/like`, {
         method: 'POST',
         headers: {
@@ -202,6 +236,10 @@ export const UserProvider = ({ children }) => {
         setPosts((prev) =>
           prev.map((post) => (post._id === postId ? updatedPost : post))
         );
+      } else if (response.status === 404) {
+        console.error('User or post not found');
+        setUser(null);
+        localStorage.removeItem('communityHubUser');
       }
     } catch (error) {
       console.error('Error liking post:', error);
