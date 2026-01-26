@@ -17,13 +17,10 @@ const HomePage = () => {
     <div className="relative min-h-screen bg-[#f7f8f5] text-slate-800 font-inter overflow-hidden">
 
      
-      {/* PAGE CONTENT */}
       <div className="relative z-20">
 
-        {/* HERO */}
 <section className="relative pt-36 pb-32 overflow-hidden">
   
-  {/* HERO BACKGROUND IMAGE */}
   <div
     className="absolute inset-0 z-0"
     style={{
@@ -36,10 +33,8 @@ const HomePage = () => {
     }}
   />
 
-  {/* HERO FADE OVERLAY */}
   <div className="absolute inset-0 z-10 bg-gradient-to-b from-transparent via-[#f7f8f5]/70 to-[#f7f8f5]" />
 
-  {/* HERO CONTENT */}
   <div className="relative z-20 max-w-5xl mx-auto px-6 text-center">
     <FadeIn>
       <h1 className="font-libre text-4xl md:text-5xl lg:text-6xl text-slate-900 leading-tight mb-8 tracking-tight">
@@ -69,7 +64,6 @@ const HomePage = () => {
   </div>
 </section>
 
-        {/* NATURE / PHILOSOPHY */}
         <section className="py-28">
           <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-24 items-center">
 
@@ -107,7 +101,6 @@ const HomePage = () => {
           </div>
         </section>
 
-        {/* HOW IT WORKS */}
         <section id="explore" className="py-32 bg-white">
           <div className="max-w-6xl mx-auto px-6">
 
@@ -137,7 +130,6 @@ const HomePage = () => {
           </div>
         </section>
 
-        {/* FINAL CTA */}
         <section className="py-36">
           <div className="max-w-5xl mx-auto px-6 text-center">
             <FadeIn>

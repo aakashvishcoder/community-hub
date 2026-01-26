@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import FadeIn from '../components/FadeIn';
 
-// Timeline data
+
 const timelineData = [
   {
     id: 1,
@@ -72,10 +72,8 @@ const Timeline = () => {
             <FadeIn key={item.id} delay={idx * 0.15}>
               <div className={`mb-12 relative flex flex-col md:flex-row ${isLeft ? 'md:flex-row' : 'md:flex-row-reverse'}`}>
                 
-                {/* Marker */}
                 <div className="absolute -left-5 md:-left-5 top-5 w-5 h-5 rounded-full bg-[#5f7c65] border-2 border-white z-10"></div>
                 
-                {/* Card */}
                 <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8 border border-gray-200 w-full md:w-5/12 relative">
                   
                   <div className="flex justify-between items-center mb-2">

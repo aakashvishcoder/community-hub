@@ -22,17 +22,17 @@ const PlacesPage = () => {
       description: "230-acre park with trails, fishing, picnic areas, and playgrounds.",
       hours: "5:00 AM - 11:00 PM",
       website: "https://www.mckinneytexas.org/erwinpark",
-      image: ""
+      image: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/09/33/99/77/erwin-park-hike-bike.jpg?w=1200&h=-1&s=1"
     },
     {
       _id: '2',
-      name: "McKinney Public Library",
+      name: "Roy & Helen McKinney Public Library",
       type: "Library",
-      address: "215 N Tennessee St, McKinney, TX",
+      address: "101 E Hunt St, McKinney, TX 75069",
       description: "Modern library offering books, computers, study rooms, and community programs.",
       hours: "Mon-Thu: 9AM-8PM, Fri-Sat: 9AM-6PM, Sun: 1PM-5PM",
       website: "https://www.mckinneytexas.org/library",
-      image: ""
+      image: "https://www.rlginc.com/wp-content/uploads/2019/10/McKinney-Public-Library-1.jpg"
     },
     {
       _id: '3',
@@ -42,18 +42,134 @@ const PlacesPage = () => {
       description: "Natural history museum with wildlife dioramas, butterfly house, and nature trails.",
       hours: "Tue-Sat: 9AM-5PM, Sun: 1PM-5PM",
       website: "https://heardmuseum.org",
-      image: ""
+      image: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/05/8e/5a/8e/heard-natural-science.jpg?w=1200&h=-1&s=1"
     },
     {
       _id: '4',
       name: "McKinney Community Center",
       type: "Community Center",
-      address: "101 E Hunt St, McKinney, TX",
+      address: "1201 E Louisiana St, McKinney, TX",
       description: "Community center offering classes, events, and meeting spaces for residents.",
       hours: "Mon-Fri: 8AM-8PM, Sat: 9AM-5PM",
       website: "https://www.mckinneytexas.org/communitycenter",
-      image: ""
-    }
+      image: "https://www.mckinneytexas.org/ImageRepository/Document?documentID=27812"
+    },
+    {
+  _id: '5',
+  name: "Collin County History Museum",
+  type: "Museum",
+  address: "300 E Virginia St, McKinney, TX 75069",
+  description: "Museum in a historic 1911 post office highlighting Collin County history with rotating exhibits and archival materials.",
+  hours: "Thu–Sat: 10AM–4PM (check seasonal schedule)",
+  website: "https://www.visitmckinney.com/things-to-do/museums-and-history/collin-county-history-museum/",
+  image: "https://texas-time-travel.imgix.net/images/A-Regional-Photos/Lakes/Lakes-McKinney-Collin-County-Historical-Museum.jpg?auto=compress%2Cformat&fit=max&h=1080&q=80&w=1920&s=e83caa09820f62aa393cd8bd49176515"
+},
+{
+  _id: '6',
+  name: "Chestnut Square Historic Village",
+  type: "Historic Site",
+  address: "315 S Chestnut St, McKinney, TX 75069",
+  description: "Living history village with preserved 19th-century homes, schoolhouse, chapel, and general store that showcase pioneer life.",
+  hours: "Varies by season and events",
+  website: "https://www.visitmckinney.com/things-to-do/museums-and-history/chestnut-square-historic-village/",
+  image: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/25/17/94/39/1916-dulaney-house.jpg?w=1200&h=-1&s=1"
+},
+{
+  _id: '7',
+  name: "Gabe Nesbitt Community Park",
+  type: "Park",
+  address: "7001 Eldorado Pkwy, McKinney, TX",
+  description: "Large park featuring sports fields, playgrounds, picnic areas, walking paths and community events.",
+  hours: "5:00 AM – 11:00 PM",
+  website: "https://www.mckinneytexas.org/parks",
+  image: "https://parks.mckinneytexas.org/wp-content/uploads/2025/05/gabenesbittcommunitypark-54-1600.jpg"
+},
+{
+  _id: '8',
+  name: "John & Judy Gay Library",
+  type: "Library",
+  address: "6861 W Eldorado Pkwy, McKinney, TX 75070",
+  description: "Full-service public library with books, programs, and community events in the heart of McKinney’s west side.",
+  hours: "Varies (check site)",
+  website: "https://www.mckinneytexas.org/library",
+  image: "https://dmn-dallas-news-prod.cdn.arcpublishing.com/resizer/v2/C26JTRVH6QRRSSHN4D74G7RYWU.jpg?auth=5d67483838ca6828130fde64c441ae93198ad9f1c0e14cc577c223bf7e19371b&quality=80&height=553&width=830&smart=true"
+},
+{
+  _id: '9',
+  name: "McKinney Performing Arts Center",
+  type: "Community Center",
+  address: "111 N Tennessee St, McKinney, TX 75069",
+  description: "Historic performing arts venue hosted in the old Collin County Courthouse offering theater, concerts, and community arts programs.",
+  hours: "Varies by performance schedule",
+  website: "https://www.mckinneyperformingarts.org",
+  image: "https://assets.simpleviewinc.com/simpleview/image/upload/crm/mckinneytx/McKinney-Performing-Arts-Center_0505F329-5056-A36F-23FB2271C9142226-0505ea7e5056a36_0505f3c6-5056-a36f-23bbd05a75ed758f.jpg"
+},
+{
+  _id: '13',
+  name: "Community Food Pantry of McKinney",
+  type: "Health",
+  address: "307 Smith St, McKinney, TX 75069",
+  description: "Nonprofit food pantry providing access to nutritious groceries and household essentials for families in need. Open to anyone in the McKinney area seeking support and food security services.", 
+  hours: "Mon–Wed: 11AM–3:30PM, Thu: 11AM–6:30PM, Fri: 10AM–12:30PM",
+  website: "https://www.mckinneyfoodpantry.org",
+  image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTeR0ah_GPGF3KMJ8f-Nl26FpOpjiVvLoGFVQ&s"
+},
+{
+  _id: '14',
+  name: "HUGS Café",
+  type: "Food",
+  address: "224 E Virginia St, McKinney, TX 75069",
+  description: "A local nonprofit café serving fresh, healthy soups, salads, and sandwiches while providing job training for adults with special needs. A community-centered restaurant with flavorful, wholesome menu options.",
+  hours: "Tue–Sat: 11AM–3PM (check locally for weekend specials)",
+  website: "https://www.hugscafe.org",
+  image: "https://texashighways.com/wp-content/uploads/2021/12/plates-hugs-cafe-exterior.jpg"
+},
+{
+  _id: '15',
+  name: "Collin County Community Health Services",
+  type: "Health",
+  address: "825 N McDonald St, McKinney, TX 75071",
+  description: "Public health clinic offering immunizations, wellness checkups, health education, and preventive services for residents of all ages.",
+  hours: "Mon–Fri: 8AM–5PM (closed for lunch 12PM–1PM)",
+  website: "https://www.collincountytx.gov/healthcare_services/",
+  image: "https://www.texashealth.org/newsroom/-/media/Project/THR/shared/News-Release-Images/TX-Community-Hope-Glass-Door-Office.jpg"
+},
+{
+  _id: '16',
+  name: "Harvest Seasonal Kitchen",
+  type: "Food",
+  address: "215 N Kentucky St, McKinney, TX 75069",
+  description: "Seasonally driven restaurant celebrating fresh, locally sourced ingredients with a menu that changes throughout the year. Great for community dining and farm-to-table experiences.",
+  hours: "Tue–Sat: 11AM–9PM, Sun: 11AM–3PM (verify hours)",
+  website: "https://www.harvesttx.com/",
+  image: "https://lh3.googleusercontent.com/p/AF1QipNryLXW0BkEE3pPDcqWpd3G044plluF-g2oGKtp=w289-h312-n-k-no"
+},
+{
+  _id: '17',
+  name: "Collin College – Central Park Campus",
+  type: "Education",
+  address: "2200 W University Dr, McKinney, TX 75071",
+  description: "Public community college campus offering associate degrees, workforce training, continuing education, and community programs.",
+  hours: "Mon–Fri: 7AM–10PM, Sat: 8AM–5PM (varies by building)",
+  website: "https://www.collin.edu/locations/mckinney.html",
+  image: "https://images.squarespace-cdn.com/content/v1/5820b938d482e9a9a7034dea/1600444464357-MWHKQB80E8MRGPDVGYOB/project-137-8647.jpg?format=1000w"
+},
+{
+  _id: '18',
+  name: "McKinney ISD Administration Building",
+  type: "Education",
+  address: "1400 Wilson Creek Pkwy, McKinney, TX 75069",
+  description: "Administrative headquarters for McKinney Independent School District, supporting local public schools, educational programs, and family services.",
+  hours: "Mon–Fri: 8AM–5PM",
+  website: "https://www.mckinneyisd.net",
+  image: "https://cloudfront-us-east-1.images.arcpublishing.com/dmn/SVUX7OXPDRF6TFKBQ3ZPLLE5ME.jpg"
+}
+
+
+
+
+
+
   ];
 
   const getActiveCategory = () => {
@@ -87,25 +203,19 @@ const PlacesPage = () => {
     }
   };
 
-  const filterMockPlaces = (category) => {
-    if (category === 'all') {
-      setPlaces(mockPlaces);
-    } else {
-      const categoryMap = {
-        'Education': 'Library',
-        'Health': 'Community Center', 
-        'Food': 'Restaurant',
-        'Park': 'Park',
-        'Library': 'Library',
-        'Museum': 'Museum',
-        'Community Center': 'Community Center'
-      };
-      
-      const mockType = categoryMap[category] || category;
-      const filtered = mockPlaces.filter(place => place.type === mockType);
-      setPlaces(filtered);
-    }
-  };
+ const filterMockPlaces = (category) => {
+  if (category === 'all') {
+    setPlaces(mockPlaces);
+    return;
+  }
+
+  const filtered = mockPlaces.filter(
+    place => place.type === category
+  );
+
+  setPlaces(filtered);
+};
+
 
   useEffect(() => {
     loadPlaces();
@@ -164,113 +274,61 @@ const PlacesPage = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-6xl">
-      <div className="text-center mb-10">
-        <h1 className="text-3xl font-bold text-gray-900 mb-3">Places in Our Community</h1>
+    <div className="max-w-6xl mx-auto px-4 py-10">
+      <div className="text-center mb-12">
+        <h1 className="text-3xl font-bold text-emerald-800 mb-3">
+          Community Places 🌱
+        </h1>
         <p className="text-gray-600 max-w-2xl mx-auto">
-          Explore parks, libraries, museums, and other essential community spaces.
+          Discover parks, libraries, museums, and shared spaces that bring our community together.
         </p>
-        <div className="mt-4">
-          <span className="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
-            Viewing: {getCategoryName(getActiveCategory())}
-          </span>
-        </div>
       </div>
 
-      <div className="mb-8 text-center">
-        <button 
+
+      <div className="text-center mb-10">
+        <button
           onClick={() => setShowForm(true)}
-          className="bg-accent-500 hover:bg-accent-600 text-black font-medium py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all"
+          className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-3 px-6 rounded-xl shadow-sm transition"
         >
           Suggest a New Place
         </button>
       </div>
 
-      {error && (
-        <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded">
-          <p className="text-red-700">{error}</p>
-        </div>
-      )}
 
       {loading ? (
-        <div className="text-center py-12">
-          <div className="animate-pulse text-gray-500">Loading places...</div>
-        </div>
-      ) : places.length === 0 ? (
-        <div className="text-center py-12">
-          <div className="text-gray-400 mb-4">No places found</div>
-          <p className="text-gray-600">Try selecting a different category or suggest a new place!</p>
-          <div className="mt-6">
-            <button 
-              onClick={() => setShowForm(true)}
-              className="bg-accent-500 hover:bg-accent-600 text-white font-medium py-2 px-4 rounded-lg"
-            >
-              Suggest Your First Place
-            </button>
-          </div>
+        <div className="text-center py-16 text-emerald-600 animate-pulse">
+          Loading community spaces…
         </div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {places.map(place => (
-            <FadeIn key={place._id} delay={0}>
-              <div 
-                className="bg-white rounded-2xl overflow-hidden shadow-card hover:shadow-hover transition-shadow cursor-pointer"
-                onClick={() => openPlaceDetails(place)}
+            <FadeIn key={place._id}>
+              <div
+                onClick={() => setSelectedPlace(place)}
+                className="bg-white rounded-2xl border border-emerald-100 shadow-sm hover:shadow-md transition cursor-pointer overflow-hidden"
               >
-                <div className="h-48 overflow-hidden">
+                <div className="h-48 bg-emerald-50 flex items-center justify-center">
                   {place.image ? (
-                    <img 
-                      src={place.image} 
-                      alt={place.name}
-                      className="w-full h-full object-cover"
-                    />
+                    <img src={place.image} alt={place.name} className="w-full h-full object-cover" />
                   ) : (
-                    <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                      <span className="text-gray-500 text-lg">📍 {place.name}</span>
-                    </div>
+                    <span className="text-emerald-700 text-lg">📍 {place.name}</span>
                   )}
                 </div>
+
+
                 <div className="p-5">
-                  <div className="flex justify-between items-start mb-2">
-                    <h3 className="text-lg font-bold text-gray-900">{place.name}</h3>
-                    <span className="inline-block bg-secondary-100 text-secondary-800 text-xs px-2 py-1 rounded-full">
+                  <div className="flex justify-between items-center mb-2">
+                    <h3 className="font-bold text-gray-900">{place.name}</h3>
+                    <span className="bg-emerald-100 text-emerald-700 text-xs px-2 py-1 rounded-full">
                       {place.type}
                     </span>
                   </div>
-                  
-                  <div className="flex items-start text-gray-600 text-sm mb-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                    <span>{place.address}</span>
-                  </div>
-                  
-                  {place.hours && (
-                    <div className="flex items-start text-gray-600 text-sm mb-3">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                      <span>{place.hours}</span>
-                    </div>
-                  )}
-                  
-                  <p className="text-gray-700 text-sm mb-4 line-clamp-2">{place.description}</p>
-                  
-                  {place.website && (
-                    <a 
-                      href={place.website} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center text-primary-600 hover:text-primary-800 text-sm font-medium"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      Visit Website
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                      </svg>
-                    </a>
-                  )}
+
+
+                  <p className="text-gray-600 text-sm mb-2">{place.address}</p>
+                  <p className="text-gray-700 text-sm line-clamp-2">
+                    {place.description}
+                  </p>
                 </div>
               </div>
             </FadeIn>
@@ -278,103 +336,84 @@ const PlacesPage = () => {
         </div>
       )}
 
-      {selectedPlace && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
-          onClick={closePlaceDetails}
-        >
-          <div 
-            className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="p-6">
-              <div className="flex justify-between items-start mb-4">
-                <h2 className="text-2xl font-bold text-gray-900">{selectedPlace.name}</h2>
-                <button 
-                  onClick={closePlaceDetails}
-                  className="text-gray-500 hover:text-gray-700 text-2xl"
-                >
-                  ×
-                </button>
-              </div>
-              
-              {selectedPlace.image ? (
-                <div className="mb-4 rounded-lg overflow-hidden">
-                  <img 
-                    src={selectedPlace.image} 
-                    alt={selectedPlace.name}
-                    className="w-full h-64 object-cover"
-                  />
-                </div>
-              ) : (
-                <div className="w-full h-64 bg-gray-200 flex items-center justify-center mb-4">
-                  <span className="text-gray-500 text-xl">📍 {selectedPlace.name}</span>
-                </div>
-              )}
-              
-              <div className="flex flex-wrap gap-2 mb-4">
-                <span className="inline-block bg-secondary-100 text-secondary-800 px-3 py-1 rounded-full text-sm font-medium">
-                  {selectedPlace.type}
-                </span>
-              </div>
-              
-              <div className="space-y-3 mb-6">
-                <div className="flex items-start text-gray-700">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 mt-0.5 text-gray-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                  <span>{selectedPlace.address}</span>
-                </div>
-                
-                {selectedPlace.hours && (
-                  <div className="flex items-start text-gray-700">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 mt-0.5 text-gray-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <span>{selectedPlace.hours}</span>
-                  </div>
-                )}
-              </div>
-              
-              <div className="mb-6">
-                <h3 className="font-semibold text-gray-900 mb-2">Description</h3>
-                <p className="text-gray-700">{selectedPlace.description}</p>
-              </div>
-              
-              {selectedPlace.website && (
-                <div className="mb-6">
-                  <a 
-                    href={selectedPlace.website} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium"
-                  >
-                    Visit Website
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                    </svg>
-                  </a>
-                </div>
-              )}
-            </div>
-            
-            <div className="p-4 border-t border-gray-200">
-              <button
-                onClick={closePlaceDetails}
-                className="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 rounded-lg"
-              >
-                Close
-              </button>
-            </div>
-          </div>
+
+    {selectedPlace && (
+  <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+    <div className="bg-white rounded-2xl max-w-2xl w-full overflow-hidden shadow-xl animate-fadeIn">
+
+      {/* Image */}
+      {selectedPlace.image && (
+        <div className="h-64 w-full">
+          <img
+            src={selectedPlace.image}
+            alt={selectedPlace.name}
+            className="w-full h-full object-cover"
+          />
         </div>
       )}
 
+      <div className="p-6">
+        {/* Header */}
+        <div className="flex justify-between items-start mb-4">
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900">
+              {selectedPlace.name}
+            </h2>
+            <span className="inline-block mt-1 bg-emerald-100 text-emerald-700 text-xs px-3 py-1 rounded-full">
+              {selectedPlace.type}
+            </span>
+          </div>
+
+          <button
+            onClick={closePlaceDetails}
+            className="text-gray-500 hover:text-gray-800 text-2xl leading-none"
+          >
+            ×
+          </button>
+        </div>
+
+        {/* Description */}
+        <p className="text-gray-700 mb-4">
+          {selectedPlace.description}
+        </p>
+
+        {/* Details */}
+        <div className="space-y-2 text-sm text-gray-700">
+          <p>
+            <strong>📍 Address:</strong> {selectedPlace.address}
+          </p>
+
+          {selectedPlace.hours && (
+            <p>
+              <strong>⏰ Hours:</strong> {selectedPlace.hours}
+            </p>
+          )}
+        </div>
+
+        {/* Actions */}
+        {selectedPlace.website && (
+          <div className="mt-6">
+            <a
+              href={selectedPlace.website}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2 rounded-lg transition"
+            >
+              Visit Website →
+            </a>
+          </div>
+        )}
+      </div>
+    </div>
+  </div>
+)}
+
+
+
       {showForm && (
-        <PlaceForm 
-          onSubmit={handleCreatePlace}
-          onCancel={closeForm}
+        <PlaceForm
+          onSubmit={() => setShowForm(false)}
+          onCancel={() => setShowForm(false)}
           error={error}
         />
       )}
@@ -382,4 +421,7 @@ const PlacesPage = () => {
   );
 };
 
+
 export default PlacesPage;
+
+
