@@ -273,154 +273,148 @@ const PlacesPage = () => {
     return categoryMap[category] || category;
   };
 
+ 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-10">
-      <div className="text-center mb-12">
-        <h1 className="text-3xl font-bold text-emerald-800 mb-3">
-          Community Places 🌱
-        </h1>
-        <p className="text-gray-600 max-w-2xl mx-auto">
-          Discover parks, libraries, museums, and shared spaces that bring our community together.
-        </p>
-      </div>
+    <div className="min-h-screen bg-[#f1f5f0]">
+      <div className="max-w-6xl mx-auto px-4 py-12">
 
-
-      <div className="text-center mb-10">
-        <button
-          onClick={() => setShowForm(true)}
-          className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-3 px-6 rounded-xl shadow-sm transition"
-        >
-          Suggest a New Place
-        </button>
-      </div>
-
-
-      {loading ? (
-        <div className="text-center py-16 text-emerald-600 animate-pulse">
-          Loading community spaces…
+        {/* HEADER */}
+        <div className="text-center mb-12">
+          <h1 className="text-3xl font-bold text-emerald-800 mb-3">
+            Community Places 🌱
+          </h1>
+          <p className="text-gray-700 max-w-2xl mx-auto">
+            Discover parks, libraries, museums, and shared spaces that bring our community together.
+          </p>
         </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {places.map(place => (
-            <FadeIn key={place._id}>
-              <div
-                onClick={() => setSelectedPlace(place)}
-                className="bg-white rounded-2xl border border-emerald-100 shadow-sm hover:shadow-md transition cursor-pointer overflow-hidden"
-              >
-                <div className="h-48 bg-emerald-50 flex items-center justify-center">
-                  {place.image ? (
-                    <img src={place.image} alt={place.name} className="w-full h-full object-cover" />
-                  ) : (
-                    <span className="text-emerald-700 text-lg">📍 {place.name}</span>
-                  )}
-                </div>
 
-
-                <div className="p-5">
-                  <div className="flex justify-between items-center mb-2">
-                    <h3 className="font-bold text-gray-900">{place.name}</h3>
-                    <span className="bg-emerald-100 text-emerald-700 text-xs px-2 py-1 rounded-full">
-                      {place.type}
-                    </span>
-                  </div>
-
-
-                  <p className="text-gray-600 text-sm mb-2">{place.address}</p>
-                  <p className="text-gray-700 text-sm line-clamp-2">
-                    {place.description}
-                  </p>
-                </div>
-              </div>
-            </FadeIn>
-          ))}
-        </div>
-      )}
-
-
-    {selectedPlace && (
-  <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-    <div className="bg-white rounded-2xl max-w-2xl w-full overflow-hidden shadow-xl animate-fadeIn">
-
-      {/* Image */}
-      {selectedPlace.image && (
-        <div className="h-64 w-full">
-          <img
-            src={selectedPlace.image}
-            alt={selectedPlace.name}
-            className="w-full h-full object-cover"
-          />
-        </div>
-      )}
-
-      <div className="p-6">
-        {/* Header */}
-        <div className="flex justify-between items-start mb-4">
-          <div>
-            <h2 className="text-2xl font-bold text-gray-900">
-              {selectedPlace.name}
-            </h2>
-            <span className="inline-block mt-1 bg-emerald-100 text-emerald-700 text-xs px-3 py-1 rounded-full">
-              {selectedPlace.type}
-            </span>
-          </div>
-
+        {/* CTA */}
+        <div className="text-center mb-10">
           <button
-            onClick={closePlaceDetails}
-            className="text-gray-500 hover:text-gray-800 text-2xl leading-none"
+            onClick={() => setShowForm(true)}
+            className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-3 px-6 rounded-xl shadow-sm transition"
           >
-            ×
+            Suggest a New Place
           </button>
         </div>
 
-        {/* Description */}
-        <p className="text-gray-700 mb-4">
-          {selectedPlace.description}
-        </p>
-
-        {/* Details */}
-        <div className="space-y-2 text-sm text-gray-700">
-          <p>
-            <strong>📍 Address:</strong> {selectedPlace.address}
-          </p>
-
-          {selectedPlace.hours && (
-            <p>
-              <strong>⏰ Hours:</strong> {selectedPlace.hours}
-            </p>
-          )}
-        </div>
-
-        {/* Actions */}
-        {selectedPlace.website && (
-          <div className="mt-6">
-            <a
-              href={selectedPlace.website}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2 rounded-lg transition"
-            >
-              Visit Website →
-            </a>
+        {/* GRID */}
+        {loading ? (
+          <div className="text-center py-16 text-emerald-700 animate-pulse">
+            Loading community spaces…
           </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            {places.map(place => (
+              <FadeIn key={place._id}>
+                <div
+                  onClick={() => setSelectedPlace(place)}
+                  className="bg-[#e9efe7] rounded-2xl border border-emerald-200 shadow-md hover:shadow-lg transition cursor-pointer overflow-hidden"
+                >
+                  <div className="h-48 bg-emerald-100">
+                    {place.image ? (
+                      <img
+                        src={place.image}
+                        alt={place.name}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="h-full flex items-center justify-center text-emerald-700">
+                        📍 {place.name}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="p-5">
+                    <div className="flex justify-between items-center mb-2">
+                      <h3 className="font-bold text-gray-900">{place.name}</h3>
+                      <span className="bg-emerald-200 text-emerald-800 text-xs px-2 py-1 rounded-full">
+                        {place.type}
+                      </span>
+                    </div>
+
+                    <p className="text-gray-700 text-sm mb-2">{place.address}</p>
+                    <p className="text-gray-700 text-sm line-clamp-2">
+                      {place.description}
+                    </p>
+                  </div>
+                </div>
+              </FadeIn>
+            ))}
+          </div>
+        )}
+
+        {/* MODAL */}
+        {selectedPlace && (
+          <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
+            <div className="bg-[#e9efe7] rounded-2xl max-w-2xl w-full overflow-hidden shadow-xl">
+
+              {selectedPlace.image && (
+                <div className="h-64">
+                  <img
+                    src={selectedPlace.image}
+                    alt={selectedPlace.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
+
+              <div className="p-6">
+                <div className="flex justify-between items-start mb-4">
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-900">
+                      {selectedPlace.name}
+                    </h2>
+                    <span className="inline-block mt-1 bg-emerald-200 text-emerald-800 text-xs px-3 py-1 rounded-full">
+                      {selectedPlace.type}
+                    </span>
+                  </div>
+
+                  <button
+                    onClick={closePlaceDetails}
+                    className="text-gray-600 hover:text-gray-900 text-2xl"
+                  >
+                    ×
+                  </button>
+                </div>
+
+                <p className="text-gray-800 mb-4">
+                  {selectedPlace.description}
+                </p>
+
+                <div className="space-y-2 text-sm text-gray-800">
+                  <p><strong>📍 Address:</strong> {selectedPlace.address}</p>
+                  {selectedPlace.hours && <p><strong>⏰ Hours:</strong> {selectedPlace.hours}</p>}
+                </div>
+
+                {selectedPlace.website && (
+                  <div className="mt-6">
+                    <a
+                      href={selectedPlace.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2 rounded-lg transition"
+                    >
+                      Visit Website →
+                    </a>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {showForm && (
+          <PlaceForm
+            onSubmit={() => setShowForm(false)}
+            onCancel={() => setShowForm(false)}
+            error={error}
+          />
         )}
       </div>
     </div>
-  </div>
-)}
-
-
-
-      {showForm && (
-        <PlaceForm
-          onSubmit={() => setShowForm(false)}
-          onCancel={() => setShowForm(false)}
-          error={error}
-        />
-      )}
-    </div>
   );
 };
-
 
 export default PlacesPage;
 

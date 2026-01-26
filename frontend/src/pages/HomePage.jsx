@@ -63,6 +63,87 @@ const HomePage = () => {
     </FadeIn>
   </div>
 </section>
+<section className="py-32 bg-[#f1f5f0]">
+  <div className="max-w-6xl mx-auto px-6">
+
+    {/* Section Header */}
+    <FadeIn className="mb-20 max-w-3xl">
+      <h2 className="font-libre text-3xl md:text-4xl text-slate-900 mb-6 tracking-tight">
+        McKinney Highlights
+      </h2>
+      <p className="text-slate-600 text-lg leading-relaxed">
+        A few beloved places that reflect McKinney’s history, creativity, and connection to nature.
+      </p>
+    </FadeIn>
+
+    {/* Highlight Cards */}
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+
+      {[
+        {
+          name: "Heard Natural Science Museum",
+          description:
+            "A 289-acre wildlife sanctuary and museum offering trails, wetlands, and hands-on learning rooted in North Texas ecology.",
+          image:
+            "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/05/8e/5a/8e/heard-natural-science.jpg?w=1200&h=-1&s=1",
+          type: "Nature & Learning",
+        },
+        {
+          name: "Historic Downtown McKinney",
+          description:
+            "A walkable historic district filled with local shops, cafés, art spaces, and one of Texas’s best-preserved town squares.",
+          image:
+            "https://www.tourtexas.com/bodyCopy_images/article-images/mckinney/Experience-downtown-Mckinney.jpg",
+          type: "Culture & Community",
+        },
+        {
+          name: "Erwin Park",
+          description:
+            "A 230-acre green space with wooded trails, open fields, and gathering spots that invite recreation and reflection.",
+          image:
+            "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/09/33/99/77/erwin-park-hike-bike.jpg?w=1200&h=-1&s=1",
+          type: "Parks & Outdoors",
+        },
+      ].map((place, i) => (
+        <FadeIn key={place.name} delay={i * 0.15}>
+          <div className="group bg-[#e9efe7] rounded-3xl overflow-hidden border border-[#dbe5d7] shadow-md hover:shadow-lg transition-all h-full flex flex-col">
+            
+            {/* Image */}
+            <div className="h-52 overflow-hidden">
+              <img
+                src={place.image}
+                alt={place.name}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+            </div>
+
+            {/* Content */}
+            <div className="p-6 flex flex-col flex-grow">
+              <span className="text-xs uppercase tracking-wide text-[#5f7c65] font-medium mb-2">
+                {place.type}
+              </span>
+
+              <h3 className="font-libre text-xl text-slate-900 mb-3">
+                {place.name}
+              </h3>
+
+              <p className="text-slate-600 leading-relaxed mb-6 flex-grow">
+                {place.description}
+              </p>
+
+              <Link
+                to="/places"
+                className="inline-flex items-center gap-2 text-[#5f7c65] font-medium hover:text-[#4f6a55] transition"
+              >
+                Learn more →
+              </Link>
+            </div>
+          </div>
+        </FadeIn>
+      ))}
+    </div>
+  </div>
+</section>
 
         <section className="py-28">
           <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-24 items-center">

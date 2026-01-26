@@ -12,14 +12,17 @@ import WeatherPage from './pages/WeatherPage';
 import FunFactsPage from './pages/FunFactsPage';
 import SourcesPage from './pages/SourcesPage'
 import { UserProvider } from './contexts/UserContext'
+import ScrollToTop from './components/ScrollToTop';
 
 function App() {
   return (
     <UserProvider>
+    
       <Router>
         <div className="flex flex-col min-h-screen bg-white">
           <Header />
           <main className="flex-grow">
+            <ScrollToTop />
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/auth" element={<AuthPage />} />
