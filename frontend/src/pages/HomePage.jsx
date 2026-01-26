@@ -1,124 +1,238 @@
 import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import FadeIn from '../components/FadeIn';
 
 const HomePage = () => {
+  const [scrollY, setScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => setScrollY(window.scrollY);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const fadeOut = Math.min(scrollY / 450, 1);
+
   return (
-    <div className="min-h-screen bg-[#fafaf7] text-slate-800 font-inter">
-      <section className="pt-32 pb-28">
-        <div className="max-w-5xl mx-auto px-6 text-center">
-          <FadeIn>
-            <h1 className="font-libre text-4xl md:text-5xl lg:text-6xl text-slate-900 leading-tight mb-8">
-              Learning From Nature,<br />Building Community
-            </h1>
-            <p className="text-lg text-slate-600 max-w-3xl mx-auto leading-relaxed mb-12">
-              A living library of local knowledge, resources, and relationships—rooted in place, guided by care, and grown together.
-            </p>
-            <div className="flex flex-col sm:flex-row justify-center gap-5">
+    <div className="relative min-h-screen bg-[#f7f8f5] text-slate-800 font-inter overflow-hidden">
+
+     
+      <div className="relative z-20">
+
+<section className="relative pt-36 pb-32 overflow-hidden">
+  
+  <div
+    className="absolute inset-0 z-0"
+    style={{
+      backgroundImage:
+        "url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=3000&q=90')",
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      opacity: Math.max(1 - scrollY / 350, 0),
+      transform: `translateY(${scrollY * 0.15}px)`,
+    }}
+  />
+
+  <div className="absolute inset-0 z-10 bg-gradient-to-b from-transparent via-[#f7f8f5]/70 to-[#f7f8f5]" />
+
+  <div className="relative z-20 max-w-5xl mx-auto px-6 text-center">
+    <FadeIn>
+      <h1 className="font-libre text-4xl md:text-5xl lg:text-6xl text-slate-900 leading-tight mb-8 tracking-tight">
+        Learning From Nature,<br />Growing Community
+      </h1>
+
+      <p className="text-lg md:text-xl text-slate-700 max-w-3xl mx-auto leading-relaxed mb-16">
+        A shared commons of local knowledge, relationships, and resources—rooted in place, guided by care, and grown together.
+      </p>
+
+      <div className="flex flex-col sm:flex-row justify-center gap-6">
+        <Link
+          to="/auth"
+          className="px-10 py-4 bg-[#5f7c65] text-white font-medium rounded-full shadow-sm hover:bg-[#4f6a55] transition-all"
+        >
+          Join the Community
+        </Link>
+
+        <Link
+          to="#explore"
+          className="px-10 py-4 bg-white/80 backdrop-blur border border-slate-300 text-slate-700 rounded-full hover:bg-white transition-all"
+        >
+          Explore the Commons
+        </Link>
+      </div>
+    </FadeIn>
+  </div>
+</section>
+<section className="py-32 bg-[#f1f5f0]">
+  <div className="max-w-6xl mx-auto px-6">
+
+    {/* Section Header */}
+    <FadeIn className="mb-20 max-w-3xl">
+      <h2 className="font-libre text-3xl md:text-4xl text-slate-900 mb-6 tracking-tight">
+        McKinney Highlights
+      </h2>
+      <p className="text-slate-600 text-lg leading-relaxed">
+        A few beloved places that reflect McKinney’s history, creativity, and connection to nature.
+      </p>
+    </FadeIn>
+
+    {/* Highlight Cards */}
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+
+      {[
+        {
+          name: "Heard Natural Science Museum",
+          description:
+            "A 289-acre wildlife sanctuary and museum offering trails, wetlands, and hands-on learning rooted in North Texas ecology.",
+          image:
+            "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/05/8e/5a/8e/heard-natural-science.jpg?w=1200&h=-1&s=1",
+          type: "Nature & Learning",
+        },
+        {
+          name: "Historic Downtown McKinney",
+          description:
+            "A walkable historic district filled with local shops, cafés, art spaces, and one of Texas’s best-preserved town squares.",
+          image:
+            "https://www.tourtexas.com/bodyCopy_images/article-images/mckinney/Experience-downtown-Mckinney.jpg",
+          type: "Culture & Community",
+        },
+        {
+          name: "Erwin Park",
+          description:
+            "A 230-acre green space with wooded trails, open fields, and gathering spots that invite recreation and reflection.",
+          image:
+            "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/09/33/99/77/erwin-park-hike-bike.jpg?w=1200&h=-1&s=1",
+          type: "Parks & Outdoors",
+        },
+      ].map((place, i) => (
+        <FadeIn key={place.name} delay={i * 0.15}>
+          <div className="group bg-[#e9efe7] rounded-3xl overflow-hidden border border-[#dbe5d7] shadow-md hover:shadow-lg transition-all h-full flex flex-col">
+            
+            {/* Image */}
+            <div className="h-52 overflow-hidden">
+              <img
+                src={place.image}
+                alt={place.name}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+            </div>
+
+            {/* Content */}
+            <div className="p-6 flex flex-col flex-grow">
+              <span className="text-xs uppercase tracking-wide text-[#5f7c65] font-medium mb-2">
+                {place.type}
+              </span>
+
+              <h3 className="font-libre text-xl text-slate-900 mb-3">
+                {place.name}
+              </h3>
+
+              <p className="text-slate-600 leading-relaxed mb-6 flex-grow">
+                {place.description}
+              </p>
+
               <Link
-                to="/auth"
-                className="px-8 py-4 bg-emerald-700 text-white font-medium rounded-md hover:bg-emerald-800 transition"
+                to="/places"
+                className="inline-flex items-center gap-2 text-[#5f7c65] font-medium hover:text-[#4f6a55] transition"
               >
-                Join the Community
-              </Link>
-              <Link
-                to="#explore"
-                className="px-8 py-4 border border-slate-300 text-slate-700 rounded-md hover:bg-slate-100 transition"
-              >
-                Explore the Library
+                Learn more →
               </Link>
             </div>
-          </FadeIn>
-        </div>
-      </section>
-
-      <section className="py-24">
-        <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-          <FadeIn>
-            <img
-              src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1400&q=80"
-              alt="Nature landscape"
-              className="w-full h-[420px] object-cover rounded-md"
-            />
-          </FadeIn>
-          <FadeIn>
-            <h2 className="font-libre text-3xl md:text-4xl text-slate-900 mb-6">
-              Nature Offers Blueprints
-            </h2>
-            <p className="text-slate-600 text-lg leading-relaxed mb-6">
-              Thriving ecosystems are resilient, diverse, and deeply interconnected. Communities work the same way.
-            </p>
-            <p className="text-slate-600 leading-relaxed mb-8">
-              This platform gathers local knowledge, programs, and opportunities so neighbors can learn from one another and grow stronger together.
-            </p>
-            <Link
-              to="/places"
-              className="text-emerald-700 font-medium hover:text-emerald-800"
-            >
-              Explore Local Places →
-            </Link>
-          </FadeIn>
-        </div>
-      </section>
-
-      <section id="explore" className="py-28 bg-white">
-        <div className="max-w-6xl mx-auto px-6">
-          <FadeIn className="mb-20 max-w-3xl">
-            <h2 className="font-libre text-3xl md:text-4xl text-slate-900 mb-6">
-              How the Commons Works
-            </h2>
-            <p className="text-slate-600 text-lg leading-relaxed">
-              A simple framework designed to surface what already exists—and make it accessible to everyone.
-            </p>
-          </FadeIn>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-14">
-            {[
-              {
-                title: "Discover",
-                text: "Browse verified local resources spanning food, housing, education, healthcare, and civic life."
-              },
-              {
-                title: "Contribute",
-                text: "Share organizations, initiatives, and knowledge that have helped you or your neighbors."
-              },
-              {
-                title: "Connect",
-                text: "Stay informed about events, volunteer needs, and opportunities to participate locally."
-              }
-            ].map((item, i) => (
-              <FadeIn key={i} delay={0.15 * i}>
-                <div>
-                  <h3 className="font-libre text-xl text-slate-900 mb-4">
-                    {item.title}
-                  </h3>
-                  <p className="text-slate-600 leading-relaxed">
-                    {item.text}
-                  </p>
-                </div>
-              </FadeIn>
-            ))}
           </div>
-        </div>
-      </section>
+        </FadeIn>
+      ))}
+    </div>
+  </div>
+</section>
 
-      <section className="py-28">
-        <div className="max-w-5xl mx-auto px-6 text-center">
-          <FadeIn>
-            <h2 className="font-libre text-3xl md:text-4xl text-slate-900 mb-8">
-              A Community Is a Living System
-            </h2>
-            <p className="text-slate-600 text-lg leading-relaxed mb-12">
-              Like forests, prairies, and watersheds, strong communities grow through care, shared knowledge, and mutual support.
-            </p>
-            <Link
-              to="/auth"
-              className="inline-block px-10 py-4 bg-slate-900 text-white font-medium rounded-md hover:bg-slate-800 transition"
-            >
-              Create a Free Account
-            </Link>
-          </FadeIn>
-        </div>
-      </section>
+        <section className="py-28">
+          <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-24 items-center">
+
+            <FadeIn>
+              <div className="relative">
+                <div className="absolute -inset-6 bg-[#dce6da] rounded-3xl blur-2xl opacity-70" />
+                <img
+                  src="https://www.tourtexas.com/bodyCopy_images/article-images/mckinney/Experience-downtown-Mckinney.jpg"
+                  alt="Nature landscape"
+                  className="relative w-full h-[460px] object-cover rounded-3xl shadow-md"
+                />
+              </div>
+            </FadeIn>
+
+            <FadeIn>
+              <h2 className="font-libre text-3xl md:text-4xl text-slate-900 mb-6 tracking-tight">
+                Nature as Teacher
+              </h2>
+
+              <p className="text-slate-600 text-lg leading-relaxed mb-6">
+                Healthy ecosystems thrive through diversity, reciprocity, and care. Human communities are no different.
+              </p>
+
+              <p className="text-slate-600 leading-relaxed mb-10">
+                This platform brings together local wisdom, shared initiatives, and meaningful ways to participate—so communities can grow resilient, connected, and rooted.
+              </p>
+
+              <Link
+                to="/places"
+                className="inline-flex items-center gap-2 text-[#5f7c65] font-medium hover:text-[#4f6a55] transition"
+              >
+                Explore Local Places →
+              </Link>
+            </FadeIn>
+          </div>
+        </section>
+
+        <section id="explore" className="py-32 bg-white">
+          <div className="max-w-6xl mx-auto px-6">
+
+            <FadeIn className="mb-24 max-w-3xl">
+              <h2 className="font-libre text-3xl md:text-4xl text-slate-900 mb-6 tracking-tight">
+                How the Commons Works
+              </h2>
+              <p className="text-slate-600 text-lg leading-relaxed">
+                A gentle framework for sharing what exists, supporting one another, and strengthening local life.
+              </p>
+            </FadeIn>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-14">
+              {[
+                { title: "Discover", text: "Find local organizations, shared resources, and knowledge rooted in your community." },
+                { title: "Contribute", text: "Offer what you know—projects, skills, and experiences that support collective wellbeing." },
+                { title: "Connect", text: "Participate in events, mutual aid, and opportunities to care for place and people." }
+              ].map((item, i) => (
+                <FadeIn key={i} delay={0.15 * i}>
+                  <div className="h-full rounded-3xl bg-[#f3f6f2] p-10 border border-[#e3eadf] hover:shadow-md transition">
+                    <h3 className="font-libre text-xl text-slate-900 mb-4">{item.title}</h3>
+                    <p className="text-slate-600 leading-relaxed">{item.text}</p>
+                  </div>
+                </FadeIn>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="py-36">
+          <div className="max-w-5xl mx-auto px-6 text-center">
+            <FadeIn>
+              <h2 className="font-libre text-3xl md:text-4xl text-slate-900 mb-8 tracking-tight">
+                Communities Grow When We Care Together
+              </h2>
+
+              <p className="text-slate-600 text-lg leading-relaxed mb-16 max-w-3xl mx-auto">
+                Join neighbors, organizers, and local stewards building a more connected, resilient future—one place at a time.
+              </p>
+
+              <Link
+                to="/auth"
+                className="inline-flex items-center justify-center px-14 py-4 bg-[#3f4f46] text-white font-medium rounded-full hover:bg-[#2f3f36] shadow-md transition-all"
+              >
+                Create a Free Account
+              </Link>
+            </FadeIn>
+          </div>
+        </section>
+
+      </div>
     </div>
   );
 };

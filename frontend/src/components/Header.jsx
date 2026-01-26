@@ -52,38 +52,41 @@ const Header = () => {
                     {item.name}
                   </Link>
                 ))}
+<div
+  className="relative"
+  onMouseEnter={() => setIsPlacesHovered(true)}
+  onMouseLeave={() => setIsPlacesHovered(false)}
+>
+  <Link
+    to="/places"
+    className={`transition ${
+      location.pathname.startsWith('/places')
+        ? 'text-slate-900 font-medium'
+        : 'hover:text-slate-900'
+    }`}
+  >
+    Places
+  </Link>
 
-                <div
-                  className="relative"
-                  onMouseEnter={() => setIsPlacesHovered(true)}
-                  onMouseLeave={() => setIsPlacesHovered(false)}
-                >
-                  <Link
-                    to="/places"
-                    className={`transition ${
-                      location.pathname === '/places'
-                        ? 'text-slate-900 font-medium'
-                        : 'hover:text-slate-900'
-                    }`}
-                  >
-                    Places
-                  </Link>
+  {/* hover bridge */}
+  <div className="absolute left-0 top-full h-2 w-full"></div>
 
-                  {isPlacesHovered && (
-                    <div className="absolute left-0 top-full mt-3 w-56 bg-white border border-slate-200 rounded-md shadow-lg py-2">
-                      {placesCategories.map((category) => (
-                        <Link
-                          key={category.path}
-                          to={category.path}
-                          className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-100"
-                          onClick={() => setIsPlacesHovered(false)}
-                        >
-                          {category.name}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </div>
+  {isPlacesHovered && (
+    <div className="absolute left-0 top-full mt-2 w-56 bg-white border border-slate-200 rounded-lg shadow-lg py-2 z-50">
+      {placesCategories.map((category) => (
+        <Link
+          key={category.path}
+          to={category.path}
+          className="block px-4 py-2 text-sm text-slate-700 hover:bg-emerald-50 hover:text-emerald-800 transition"
+          onClick={() => setIsPlacesHovered(false)}
+        >
+          {category.name}
+        </Link>
+      ))}
+    </div>
+  )}
+</div>
+
               </nav>
 
               <div>
