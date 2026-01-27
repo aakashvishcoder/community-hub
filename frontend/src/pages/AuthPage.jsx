@@ -64,7 +64,8 @@ const AuthPage = () => {
       }
 
       saveUser({
-        id: fullProfile._id,
+        _id: data.user._id,
+        id: data.user._id,
         email: fullProfile.email,
         name: fullProfile.name,
         username: fullProfile.username || fullProfile.email.split('@')[0],

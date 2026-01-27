@@ -132,4 +132,17 @@ router.get('/profile/:userId', async (req, res) => {
   }
 });
 
+router.get('/validate/:userId', async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json({ valid: true, userId: user._id });
+  } catch (error) {
+    console.error('Validation error:', error);
+    res.status(400).json({ message: 'Invalid user ID' });
+  }
+});
+
 module.exports = router;
