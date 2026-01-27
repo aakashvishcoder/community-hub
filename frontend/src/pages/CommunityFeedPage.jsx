@@ -12,8 +12,16 @@ const CommunityFeedPage = () => {
     showUserProfile,
     closeProfileModal,
     viewedUser,
-    isProfileModalOpen
+    isProfileModalOpen,
+    fetchPosts // Assumes useUser provides a fetchPosts method
   } = useUser();
+    // Auto-refresh posts every 5 seconds
+    useEffect(() => {
+      const interval = setInterval(() => {
+        if (fetchPosts) fetchPosts();
+      }, 5000);
+      return () => clearInterval(interval);
+    }, [fetchPosts]);
   
   const [newPost, setNewPost] = useState('');
   const [imageFile, setImageFile] = useState(null);

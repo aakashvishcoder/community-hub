@@ -257,20 +257,21 @@ export const UserProvider = ({ children }) => {
     }
   };
 
-  useEffect(() => {
-    const loadPosts = async () => {
-      try {
-        const response = await fetch(`${BACKEND_URL}/api/posts`);
-        if (response.ok) {
-          const postsData = await response.json();
-          setPosts(postsData);
-        }
-      } catch (error) {
-        console.error('Error loading posts:', error);
+  // Fetch posts from backend
+  const fetchPosts = async () => {
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/posts`);
+      if (response.ok) {
+        const postsData = await response.json();
+        setPosts(postsData);
       }
-    };
+    } catch (error) {
+      console.error('Error loading posts:', error);
+    }
+  };
 
-    loadPosts();
+  useEffect(() => {
+    fetchPosts();
   }, []);
 
   const [viewedUser, setViewedUser] = useState(null);
@@ -308,7 +309,8 @@ export const UserProvider = ({ children }) => {
         closeProfileModal,
         viewedUser,
         isProfileModalOpen,
-        loading
+        loading,
+        fetchPosts
       }}
     >
       {children}
