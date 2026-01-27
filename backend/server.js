@@ -15,6 +15,7 @@ const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:5174',
   'http://localhost:3000',
+  'https://community-hub-nine-topaz.vercel.app',
   process.env.FRONTEND_URL || 'http://localhost:5173'
 ];
 
