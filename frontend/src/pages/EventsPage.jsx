@@ -4,6 +4,48 @@ import FadeIn from '../components/FadeIn';
 import EventModal from '../components/EventModal';
 import EventForm from '../components/EventForm';
 
+const officialEvents = [
+  {
+    _id: 'official-1',
+    title: "McKinney Farmers Market",
+    category: "Market",
+    date: "2026-04-13",
+    time: "8:00 AM – 12:00 PM",
+    location: "Chestnut Square Historic Village",
+    description:
+      "Shop fresh produce, baked goods, and artisan products from local North Texas farmers and makers.",
+    image:
+      "https://img.ctykit.com/cdn/tx-houston/images/tr:w-1800/dsc03257-1.jpg",
+    official: true
+  },
+  {
+    _id: 'official-2',
+    title: "Arts in Bloom Festival",
+    category: "Festival",
+    date: "2026-04-26",
+    time: "10:00 AM – 6:00 PM",
+    location: "Historic Downtown McKinney",
+    description:
+      "A signature McKinney event celebrating art, music, food, and local culture in the downtown square.",
+    image:
+      "https://www.eventbrite.com/e/_next/image?url=https%3A%2F%2Fimg.evbuc.com%2Fhttps%253A%252F%252Fcdn.evbuc.com%252Fimages%252F713418079%252F98296233601%252F1%252Foriginal.20240306-223727%3Fw%3D600%26auto%3Dformat%252Ccompress%26q%3D75%26sharp%3D10%26rect%3D0%252C14%252C1200%252C600%26s%3D2aa59bae321790851672ce422a9f2cc2&w=940&q=75",
+    official: true
+  },
+  {
+    _id: 'official-3',
+    title: "Music in the Park",
+    category: "Concert",
+    date: "2026-05-10",
+    time: "7:00 PM – 9:00 PM",
+    location: "Towne Lake Park",
+    description:
+      "Bring a blanket and enjoy live music under the stars as part of McKinney’s outdoor concert series.",
+    image:
+      "https://da7jxvkvc73ty.cloudfront.net/wp-content/uploads/sites/283/2024/05/McKinney_Hub_121_Live-music-scaled.jpg",
+    official: true
+  }
+];
+
 const EventsPage = () => {
   const { user } = useUser();
   const [events, setEvents] = useState([]);
@@ -22,12 +64,21 @@ const EventsPage = () => {
       const params = new URLSearchParams();
       if (searchTerm) params.append('search', searchTerm);
       if (selectedCategory !== 'all') params.append('category', selectedCategory);
+
       const res = await fetch(`${BACKEND_URL}/api/events?${params.toString()}`);
+      let userEvents = [];
+
       if (res.ok) {
-        const data = await res.json();
-        setEvents(data);
+        userEvents = await res.json();
       }
-    } catch (err) {
+
+      const filteredOfficial = officialEvents.filter(e =>
+        (selectedCategory === 'all' || e.category === selectedCategory) &&
+        (!searchTerm || e.title.toLowerCase().includes(searchTerm.toLowerCase()))
+      );
+
+      setEvents([...filteredOfficial, ...userEvents]);
+    } catch {
       setError('Failed to load events');
     } finally {
       setLoading(false);
@@ -36,98 +87,100 @@ const EventsPage = () => {
 
   useEffect(() => { loadEvents(); }, [searchTerm, selectedCategory]);
 
-  const handleCreateEvent = async (eventData) => {
-    if (!user) return;
-    try {
-      const res = await fetch(`${BACKEND_URL}/api/events`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: user.id, ...eventData })
-      });
-      if (res.ok) {
-        const newEvent = await res.json();
-        setEvents(prev => [newEvent, ...prev]);
-        setShowForm(false);
-        setError('');
-      } else {
-        const errData = await res.json();
-        setError(errData.message || 'Failed to create event');
-      }
-    } catch {
-      setError('Failed to create event');
-    }
-  };
-
-  const openEventDetails = async (id) => {
-    try {
-      const res = await fetch(`${BACKEND_URL}/api/events/${id}`);
-      if (res.ok) setSelectedEvent(await res.json());
-    } catch {}
-  };
-
-  const closeEventDetails = () => setSelectedEvent(null);
-  const closeForm = () => { setShowForm(false); setError(''); };
-
   return (
-    <div className="container mx-auto px-4 py-8 max-w-6xl">
-      <div className="text-center mb-10">
-        <h1 className="text-3xl font-bold text-gray-900 mb-3">Upcoming Community Events</h1>
-        <p className="text-gray-600 max-w-2xl mx-auto">Discover local gatherings, workshops, volunteer opportunities, and more.</p>
-      </div>
+    <div className="min-h-screen bg-[#f2f6f1]">
+      <div className="max-w-7xl mx-auto px-6 py-14">
 
-      <div className="bg-white rounded-xl shadow-card p-5 mb-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <input type="text" placeholder="Search events..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"/>
-          <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)} className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
-            {categories.map(cat => <option key={cat} value={cat}>{cat==='all'?'All Categories':cat}</option>)}
-          </select>
-          <button onClick={() => setShowForm(true)} className="w-full bg-primary-500 hover:bg-primary-600 text-white font-medium py-2.5 rounded-lg">Submit an Event</button>
+        {/* Header */}
+        <div className="text-center mb-14">
+          <h1 className="text-4xl font-bold text-slate-900 mb-4">
+            McKinney Community Events 🎉
+          </h1>
+          <p className="text-slate-600 max-w-3xl mx-auto">
+            Explore official city events and community-submitted gatherings happening around McKinney.
+          </p>
         </div>
-      </div>
 
-      {error && <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded text-red-700">{error}</div>}
-
-      {loading ? (
-        <div className="text-center py-12 text-gray-500 animate-pulse">Loading events...</div>
-      ) : events.length === 0 ? (
-        <div className="text-center py-12 text-gray-600">No events found. Try adjusting your search or check back soon!</div>
-      ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-          {events.map(event => (
-            <FadeIn key={event._id} delay={0}>
-              <div className="bg-white rounded-2xl overflow-hidden shadow-card hover:shadow-hover transition-shadow cursor-pointer" onClick={() => openEventDetails(event._id)}>
-                <div className="h-40 overflow-hidden">
-                  {event.image ? (
-                    <img src={event.image} alt={event.title} className="w-full h-full object-cover" onError={(e) => e.target.classList.add('bg-gray-200')} />
-                  ) : (
-                    <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-500">No Image</div>
-                  )}
-                </div>
-                <div className="p-5">
-                  <div className="flex justify-between items-start mb-2">
-                    <h3 className="text-lg font-bold text-gray-900">{event.title}</h3>
-                    <span className="inline-block bg-primary-100 text-primary-800 text-xs px-2 py-1 rounded-full">{event.category}</span>
-                  </div>
-                  <div className="flex items-center text-gray-600 text-sm mb-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                    {new Date(event.date).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' })}
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mx-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                    {event.time}
-                  </div>
-                  <div className="flex items-center text-gray-600 text-sm mb-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                    {event.location}
-                  </div>
-                  <p className="text-gray-700 text-sm line-clamp-2">{event.description}</p>
-                </div>
-              </div>
-            </FadeIn>
-          ))}
+        {/* Filters */}
+        <div className="bg-white/90 backdrop-blur rounded-2xl shadow-md p-6 mb-10">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <input
+              placeholder="Search events…"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="px-4 py-3 border rounded-xl focus:ring-2 focus:ring-emerald-500"
+            />
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="px-4 py-3 border rounded-xl focus:ring-2 focus:ring-emerald-500"
+            >
+              {categories.map(c => (
+                <option key={c} value={c}>{c === 'all' ? 'All Categories' : c}</option>
+              ))}
+            </select>
+            <button
+              onClick={() => setShowForm(true)}
+              className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl"
+            >
+              Submit an Event
+            </button>
+          </div>
         </div>
-      )}
 
-      {selectedEvent && <EventModal event={selectedEvent} onClose={closeEventDetails} />}
-      {showForm && <EventForm onSubmit={handleCreateEvent} onCancel={closeForm} error={error} />}
+        {/* Events Grid */}
+        {loading ? (
+          <div className="text-center py-20 text-emerald-700 animate-pulse">
+            Loading events…
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+            {events.map(event => (
+              <FadeIn key={event._id}>
+                <div
+                  onClick={() => setSelectedEvent(event)}
+                  className="bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-xl transition cursor-pointer"
+                >
+                  <div className="h-44 relative">
+                    <img src={event.image} alt={event.title} className="w-full h-full object-cover" />
+                    {event.official && (
+                      <span className="absolute top-3 left-3 bg-emerald-600 text-white text-xs px-3 py-1 rounded-full">
+                        Official City Event
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="p-6">
+                    <div className="flex justify-between items-center mb-2">
+                      <h3 className="font-bold text-lg text-slate-900">
+                        {event.title}
+                      </h3>
+                      <span className="text-xs bg-emerald-100 text-emerald-800 px-2 py-1 rounded-full">
+                        {event.category}
+                      </span>
+                    </div>
+
+                    <p className="text-sm text-slate-600 mb-2">
+                      📅 {new Date(event.date).toLocaleDateString()} · ⏰ {event.time}
+                    </p>
+
+                    <p className="text-sm text-slate-600 mb-3">
+                      📍 {event.location}
+                    </p>
+
+                    <p className="text-sm text-slate-700 line-clamp-2">
+                      {event.description}
+                    </p>
+                  </div>
+                </div>
+              </FadeIn>
+            ))}
+          </div>
+        )}
+
+        {selectedEvent && <EventModal event={selectedEvent} onClose={() => setSelectedEvent(null)} />}
+        {showForm && <EventForm onSubmit={() => setShowForm(false)} onCancel={() => setShowForm(false)} error={error} />}
+      </div>
     </div>
   );
 };

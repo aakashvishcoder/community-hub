@@ -88,13 +88,13 @@ const AuthPage = () => {
     <div className="min-h-screen bg-[#f7f8f5] flex items-center justify-center px-4 py-16 font-inter">
   <div className="relative w-full max-w-md">
 
-    {/* Soft blurred background behind card */}
+    
     <div className="absolute -inset-6 bg-[#e4ede2] rounded-3xl blur-2xl opacity-70" />
 
-    {/* Card container */}
+  
     <div className="relative bg-white rounded-3xl shadow-lg px-8 py-10">
 
-      {/* Header */}
+   
       <div className="text-center mb-10">
         <h1 className="font-libre text-3xl text-slate-900 mb-3">
           {activeTab === 'login' ? 'Welcome Back' : 'Join Our Community'}
@@ -106,14 +106,13 @@ const AuthPage = () => {
         </p>
       </div>
 
-      {/* Error */}
+ 
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-700 rounded-xl px-4 py-3 mb-6 text-sm">
           {error}
         </div>
       )}
 
-      {/* Tabs */}
       <div className="flex justify-center gap-8 mb-10 border-b border-slate-200">
         <button
           onClick={() => setActiveTab('login')}
@@ -137,7 +136,7 @@ const AuthPage = () => {
         </button>
       </div>
 
-      {/* Form */}
+  
       <form onSubmit={handleSubmit} className="space-y-6">
 
         {activeTab === 'signup' && (
@@ -195,7 +194,7 @@ const AuthPage = () => {
         </button>
       </form>
 
-      {/* Footer */}
+    
       <div className="mt-8 text-center text-sm text-slate-600">
         {activeTab === 'login' ? (
           <>
