@@ -15,6 +15,7 @@ export const UserProvider = ({ children }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
+  console.log('BACKEND_URL:', BACKEND_URL);
 
   const validateUserExists = async (userId) => {
     try {
@@ -113,7 +114,17 @@ export const UserProvider = ({ children }) => {
   }, [user]);
 
   useEffect(() => {
-    localStorage.setItem('communityHubPosts', JSON.stringify(posts));
+    try {
+      const limitedPosts = posts.slice(0, 50);
+      localStorage.setItem('communityHubPosts', JSON.stringify(limitedPosts));
+    } catch (error) {
+      if (error.name === 'QuotaExceededError') {
+        console.warn('localStorage quota exceeded, clearing posts cache');
+        localStorage.removeItem('communityHubPosts');
+      } else {
+        console.error('Error saving posts:', error);
+      }
+    }
   }, [posts]);
 
   const saveUser = (userData) => {
