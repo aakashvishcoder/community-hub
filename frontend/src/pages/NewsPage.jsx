@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useUser } from '../contexts/UserContext';
 import FadeIn from '../components/FadeIn';
@@ -13,26 +14,48 @@ const NewsPage = () => {
   const [showForm, setShowForm] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [error, setError] = useState('');
+  const [useMckinney, setUseMckinney] = useState(true);
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || '';
+  const NEWS_API_KEY = import.meta.env.VITE_NEWS_API_KEY || '';
+  console.log('NEWS_API_KEY:', NEWS_API_KEY);
   const categories = ['all', 'Community', 'Resources', 'Education', 'Events', 'Announcements', 'Other'];
 
   const loadNews = async () => {
+    setLoading(true);
+    setError('');
     try {
-      const params = new URLSearchParams();
-      if (searchTerm) params.append('search', searchTerm);
-      if (selectedCategory !== 'all') params.append('category', selectedCategory);
-
-      const response = await fetch(`${BACKEND_URL}/api/news?${params.toString()}`);
-      if (response.ok) {
-        const newsData = await response.json();
-        setNews(Array.isArray(newsData) ? newsData : []);
+      let url;
+      if (useMckinney) {
+        url = `https://newsapi.org/v2/everything?q=${encodeURIComponent('McKinney Texas')}&pageSize=12&apiKey=${NEWS_API_KEY}`;
+        if (searchTerm) url += `+${encodeURIComponent(searchTerm)}`;
+      } else {
+        url = `https://newsapi.org/v2/top-headlines?country=us&pageSize=12&apiKey=${NEWS_API_KEY}`;
+        if (searchTerm) url += `&q=${encodeURIComponent(searchTerm)}`;
+      }
+      const response = await fetch(url);
+      const data = await response.json();
+      if (data.status === 'ok') {
+        setNews(
+          (data.articles || []).map((a, i) => ({
+            _id: a.url || i,
+            title: a.title,
+            date: a.publishedAt,
+            category: a.source?.name || 'External',
+            excerpt: a.description || '',
+            content: a.content || a.description || '',
+            image: a.urlToImage,
+            displayName: a.author || a.source?.name || 'Unknown',
+            profilePicture: '',
+            username: a.source?.id || '',
+          }))
+        );
       } else {
         setNews([]);
+        setError(data.message || 'Failed to load news');
       }
     } catch (err) {
-      console.error('Error loading news:', err);
-      setError('Failed to load news');
       setNews([]);
+      setError('Failed to load news');
     } finally {
       setLoading(false);
     }
@@ -40,7 +63,7 @@ const NewsPage = () => {
 
   useEffect(() => {
     loadNews();
-  }, [searchTerm, selectedCategory]);
+  }, [searchTerm, selectedCategory, useMckinney]);
 
   const handleCreateNews = async (newsData) => {
     if (!user) return;
@@ -92,7 +115,7 @@ const NewsPage = () => {
       </div>
 
       <div className="bg-white rounded-xl shadow-card p-5 mb-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
           <input
             type="text"
             placeholder="Search news..."
@@ -104,19 +127,24 @@ const NewsPage = () => {
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
             className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            // No longer disables for useExternal
           >
             {categories.map(cat => (
               <option key={cat} value={cat}>{cat === 'all' ? 'All Categories' : cat}</option>
             ))}
           </select>
-          {user && (
-            <button
-              onClick={() => setShowForm(true)}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg"
-            >
-              Submit News
-            </button>
-          )}
+          <div className="flex items-center gap-2">
+            <input
+              id="mckinney-toggle"
+              type="checkbox"
+              checked={useMckinney}
+              onChange={() => setUseMckinney(v => !v)}
+              className="accent-blue-600 h-5 w-5"
+            />
+            <label htmlFor="mckinney-toggle" className="text-gray-700 text-sm select-none">
+              {useMckinney ? 'News for McKinney, Texas' : 'Global US News'}
+            </label>
+          </div>
         </div>
       </div>
 
@@ -137,10 +165,10 @@ const NewsPage = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {news.map((article, idx) => (
-            <FadeIn key={article._id} delay={idx * 0.05}>
+            <FadeIn key={article._id || idx} delay={idx * 0.05}>
               <div
                 className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden cursor-pointer hover:shadow-md transition-shadow"
-                onClick={() => openNewsDetails(article._id)}
+                onClick={() => setSelectedArticle(article)}
               >
                 {article.image ? (
                   <img

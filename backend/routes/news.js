@@ -8,8 +8,8 @@ const router = express.Router();
 router.get('/', async (req, res) => {
   try {
     const { search, category } = req.query;
-    let filter = {};
-    
+    let filter = { city: 'McKinney, Texas' };
+
     if (search) {
       filter.$or = [
         { title: { $regex: search, $options: 'i' } },
@@ -17,11 +17,11 @@ router.get('/', async (req, res) => {
         { content: { $regex: search, $options: 'i' } }
       ];
     }
-    
+
     if (category && category !== 'all') {
       filter.category = category;
     }
-    
+
     const news = await News.find(filter).sort({ date: -1 });
     res.json(news);
   } catch (error) {
@@ -56,7 +56,8 @@ router.post('/', async (req, res) => {
       user: userId,
       username: profile?.username || user.email.split('@')[0],
       displayName: profile?.displayName || user.name,
-      profilePicture: profile?.profilePicture || ''
+      profilePicture: profile?.profilePicture || '',
+      city: 'McKinney, Texas'
     });
 
     await news.save();

@@ -433,8 +433,8 @@ const PlacesPage = () => {
 
       {showForm && (
         <PlaceForm
-          onSubmit={() => setShowForm(false)}
-          onCancel={() => setShowForm(false)}
+          onSubmit={handleCreatePlace}
+          onCancel={closeForm}
           error={error}
         />
       )}

@@ -1,6 +1,12 @@
 const mongoose = require('mongoose');
 
 const NewsSchema = new mongoose.Schema({
+    city: {
+      type: String,
+      required: true,
+      default: 'McKinney, Texas',
+      trim: true
+    },
   title: {
     type: String,
     required: true,
