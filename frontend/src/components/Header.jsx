@@ -1,12 +1,13 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useUser } from '../contexts/UserContext';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 const Header = () => {
   const location = useLocation();
   const { user } = useUser();
   const isAuthPage = location.pathname === '/auth';
-  const [isPlacesHovered, setIsPlacesHovered] = useState(false);
+  const [isPlacesOpen, setIsPlacesOpen] = useState(false);
+  const placesDropdownRef = useRef(null);
 
   const navItems = [
     { name: 'Home', path: '/' },
@@ -27,6 +28,17 @@ const Header = () => {
     { name: 'Museums', path: '/places?category=Museum' },
     { name: 'Community Centers', path: '/places?category=Community Center' }
   ];
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (placesDropdownRef.current && !placesDropdownRef.current.contains(event.target)) {
+        setIsPlacesOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   return (
     <header className="sticky top-0 z-50 bg-[#fafaf7]/90 backdrop-blur border-b border-slate-200">
@@ -52,21 +64,6 @@ const Header = () => {
                     {item.name}
                   </Link>
                 ))}
-<div
-  className="relative"
-  onMouseEnter={() => setIsPlacesHovered(true)}
-  onMouseLeave={() => setIsPlacesHovered(false)}
->
-  <Link
-    to="/places"
-    className={`transition ${
-      location.pathname.startsWith('/places')
-        ? 'text-slate-900 font-medium'
-        : 'hover:text-slate-900'
-    }`}
-  >
-    Places
-  </Link>
 
  
   <div className="absolute left-0 top-full h-2 w-full"></div>
@@ -87,6 +84,21 @@ const Header = () => {
   )}
 </div>
 
+                  {isPlacesOpen && (
+                    <div className="absolute left-0 top-full mt-3 w-56 bg-white border border-slate-200 rounded-md shadow-lg py-2 z-50">
+                      {placesCategories.map((category) => (
+                        <Link
+                          key={category.path}
+                          to={category.path}
+                          className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-100"
+                          onClick={() => setIsPlacesOpen(false)}
+                        >
+                          {category.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </nav>
 
               <div>

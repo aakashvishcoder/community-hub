@@ -1,0 +1,11 @@
+{
+  "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
+  "installCommand": "npm ci",
+  "framework": "vite",
+  "outputDirectory": "dist",
+  "env": [
+    "VITE_BACKEND_URL",
+    "VITE_WEATHER_API_KEY"
+  ]
+}
