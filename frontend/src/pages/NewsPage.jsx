@@ -7,7 +7,7 @@ import NewsForm from '../components/NewsForm';
 const NewsPage = () => {
   const { user } = useUser();
 
-  // States
+
   const [news, setNews] = useState([]);
   const [externalNews, setExternalNews] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -17,7 +17,7 @@ const NewsPage = () => {
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [error, setError] = useState('');
 
-  // Environment Variables
+
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || '';
   const NEWS_API_KEY = import.meta.env.VITE_NEWS_API_KEY;
 
@@ -31,7 +31,7 @@ const NewsPage = () => {
     'Other'
   ];
 
-  // UI Helper for Category Colors
+ 
   const getCategoryColor = (cat) => {
     const colors = {
       Community: 'bg-blue-100 text-blue-700',
@@ -44,7 +44,7 @@ const NewsPage = () => {
     return colors[cat] || colors.default;
   };
 
-  // Helper to map external news text to your site categories
+ 
   const mapCategory = (title, excerpt) => {
     const text = `${title} ${excerpt}`.toLowerCase();
     if (text.includes('school') || text.includes('education') || text.includes('student')) return 'Education';
@@ -54,7 +54,6 @@ const NewsPage = () => {
     return 'Community'; 
   };
 
-  /* ---------------- BACKEND NEWS ---------------- */
   const loadNews = async () => {
     try {
       const params = new URLSearchParams();
@@ -70,7 +69,6 @@ const NewsPage = () => {
     }
   };
 
-  /* ---------------- EXTERNAL NEWS (DALLAS) ---------------- */
   const loadExternalNews = async () => {
     if (!NEWS_API_KEY) return;
     try {
@@ -99,7 +97,7 @@ const NewsPage = () => {
         external: true
       }));
 
-      // Filter external news by the selected category dropdown
+    
       if (selectedCategory !== 'all') {
         setExternalNews(formatted.filter(art => art.category === selectedCategory));
       } else {
@@ -110,7 +108,6 @@ const NewsPage = () => {
     }
   };
 
-  /* ---------------- EFFECTS ---------------- */
   useEffect(() => {
     setLoading(true);
     const timer = setTimeout(() => {
@@ -119,14 +116,14 @@ const NewsPage = () => {
     return () => clearTimeout(timer);
   }, [searchTerm, selectedCategory]);
 
-  /* ---------------- MERGED & LIMITED TO 9 ---------------- */
+
   const displayedNews = useMemo(() => {
     return [...externalNews, ...news]
       .sort((a, b) => new Date(b.date) - new Date(a.date))
       .slice(0, 9);
   }, [news, externalNews]);
 
-  /* ---------------- ACTIONS ---------------- */
+  
   const handleCreateNews = async (newsData) => {
     if (!user) return;
     try {
@@ -146,11 +143,11 @@ const NewsPage = () => {
   };
 
   return (
-    // CHANGE BG COLOR HERE (e.g., bg-slate-50, bg-blue-50, or bg-white)
-    <div className="min-h-screen bg-slate-50 py-12 px-4 transition-colors duration-500">
+    
+    <div className="min-h-screen bg-blue-50 py-12 px-4 transition-colors duration-500">
       <div className="max-w-7xl mx-auto">
         
-        {/* Header */}
+      
         <div className="text-center mb-12">
           <h1 className="text-4xl font-extrabold text-gray-900 mb-4 tracking-tight">Dallas City News</h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
@@ -158,7 +155,7 @@ const NewsPage = () => {
           </p>
         </div>
 
-        {/* Filters */}
+      
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-10">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <input
@@ -190,7 +187,7 @@ const NewsPage = () => {
           </div>
         </div>
 
-        {/* Grid */}
+       
         {loading ? (
           <div className="flex justify-center py-20">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
