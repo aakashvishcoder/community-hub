@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useUser } from '../contexts/UserContext';
 import { Link } from 'react-router-dom';
+import FadeIn from '../components/FadeIn';
 
 const CommunityFeedPage = () => {
   const { 
@@ -13,44 +14,54 @@ const CommunityFeedPage = () => {
     closeProfileModal,
     viewedUser,
     isProfileModalOpen,
-    fetchPosts // Assumes useUser provides a fetchPosts method
+    fetchPosts
   } = useUser();
-    // Auto-refresh posts every 5 seconds
-    useEffect(() => {
-      const interval = setInterval(() => {
-        if (fetchPosts) fetchPosts();
-      }, 5000);
-      return () => clearInterval(interval);
-    }, [fetchPosts]);
-  
-  const [newPost, setNewPost] = useState('');
-  const [imageFile, setImageFile] = useState(null);
-  const [imagePreview, setImagePreview] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [replyingTo, setReplyingTo] = useState(null);
-  const [replyText, setReplyText] = useState('');
-  const [replyImageFile, setReplyImageFile] = useState(null);
-  const [replyImagePreview, setReplyImagePreview] = useState('');
-
-  const fileToBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = error => reject(error);
-    });
-  };
-
-  const handleImageChange = async (e, isReply = false) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    
-    if (!file.type.startsWith('image/')) {
-      setError('Please select an image file (jpg, png, gif)');
-      return;
-    }
-    
+  // ...existing hooks and functions...
+  // ...existing code...
+  return (
+    <div className="relative min-h-screen bg-[#f7f8f5] text-slate-800 font-inter overflow-hidden">
+      <div className="absolute inset-0 z-0" style={{
+        backgroundImage: "url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=3000&q=90')",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        opacity: 0.25
+      }} />
+      <div className="absolute inset-0 z-10 bg-gradient-to-b from-transparent via-[#f7f8f5]/70 to-[#f7f8f5]" />
+      <div className="relative z-20 max-w-3xl mx-auto px-4 py-16 text-center">
+        <FadeIn>
+          <h1 className="font-libre text-4xl md:text-5xl text-slate-900 leading-tight mb-8 tracking-tight">Community Feed</h1>
+          <p className="text-lg md:text-xl text-slate-700 max-w-2xl mx-auto leading-relaxed mb-12">
+            See what your neighbors are sharing, asking, and celebrating in real time.
+          </p>
+        </FadeIn>
+        <>
+          {user ? (
+            <div className="bg-white rounded-2xl shadow-sm border border-emerald-200 p-5 mb-8">
+              {/* ...existing code... */}
+            </div>
+          ) : (
+            <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-8 rounded-xl shadow-sm">
+              {/* ...existing code... */}
+            </div>
+          )}
+          {posts.length === 0 ? (
+            <div className="text-center py-12">
+                {/* ...existing code... */}
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {/* ...existing code... */}
+              </div>
+            )}
+            {isProfileModalOpen && viewedUser && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                {/* ...existing code... */}
+              </div>
+            )}
+          </>
+        </div>
+      </div>
+    );
     if (file.size > 5 * 1024 * 1024) {
       setError('Image must be smaller than 5MB');
       return;
@@ -195,11 +206,24 @@ const CommunityFeedPage = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-3xl">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Community Feed</h1>
+    <div className="relative min-h-screen bg-[#f7f8f5] text-slate-800 font-inter overflow-hidden">
+      <div className="absolute inset-0 z-0" style={{
+        backgroundImage: "url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=3000&q=90')",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        opacity: 0.25
+      }} />
+      <div className="absolute inset-0 z-10 bg-gradient-to-b from-transparent via-[#f7f8f5]/70 to-[#f7f8f5]" />
+      <div className="relative z-20 max-w-3xl mx-auto px-4 py-16 text-center">
+        <FadeIn>
+          <h1 className="font-libre text-4xl md:text-5xl text-slate-900 leading-tight mb-8 tracking-tight">Community Feed</h1>
+          <p className="text-lg md:text-xl text-slate-700 max-w-2xl mx-auto leading-relaxed mb-12">
+            See what your neighbors are sharing, asking, and celebrating in real time.
+          </p>
+        </FadeIn>
       
       {user ? (
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 mb-8">
+        <div className="bg-white rounded-2xl shadow-sm border border-emerald-200 p-5 mb-8">
           <div className="flex items-start space-x-3">
             <button 
               onClick={() => showUserProfile(user.id)}
@@ -272,7 +296,7 @@ const CommunityFeedPage = () => {
           </div>
         </div>
       ) : (
-        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-8">
+        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-8 rounded-xl shadow-sm">
           <p className="text-yellow-700">
             <Link to="/auth" className="font-medium text-yellow-800 hover:underline">Sign in</Link> to join the conversation!
           </p>
@@ -281,13 +305,13 @@ const CommunityFeedPage = () => {
 
       {posts.length === 0 ? (
         <div className="text-center py-12">
-          <div className="text-gray-400 mb-4">No posts yet</div>
-          <p className="text-gray-600">Be the first to share something with your community!</p>
+          <div className="text-gray-400 mb-4 text-xl">No posts yet</div>
+          <p className="text-gray-600 text-lg">Be the first to share something with your community!</p>
         </div>
       ) : (
         <div className="space-y-6">
           {posts.map(post => (
-            <div key={post._id} className="bg-white rounded-2xl shadow-sm border border-gray-200 p-5">
+            <div key={post._id} className="bg-white rounded-2xl shadow-sm border border-emerald-200 p-5">
               <div className="flex items-start space-x-3">
                 <button 
                   onClick={() => showUserProfile(post.userId)}
@@ -484,18 +508,15 @@ const CommunityFeedPage = () => {
                     </span>
                   </div>
                 )}
-                
                 <h3 className="text-lg font-bold mt-3">{viewedUser.displayName}</h3>
                 <p className="text-gray-600">@{viewedUser.username}</p>
               </div>
-              
               {viewedUser.bio && (
                 <div className="mb-4">
                   <h4 className="font-semibold text-gray-900 mb-1">About</h4>
                   <p className="text-gray-700">{viewedUser.bio}</p>
                 </div>
               )}
-              
               {(viewedUser.socials?.website || viewedUser.socials?.instagram || viewedUser.socials?.linkedin) && (
                 <div className="mb-4">
                   <h4 className="font-semibold text-gray-900 mb-2">Social Links</h4>
@@ -535,12 +556,10 @@ const CommunityFeedPage = () => {
                   </div>
                 </div>
               )}
-              
               <div className="text-sm text-gray-500">
                 Joined {new Date(viewedUser.createdAt).toLocaleDateString()}
               </div>
             </div>
-            
             <div className="p-4 border-t border-gray-200">
               <button
                 onClick={closeProfileModal}

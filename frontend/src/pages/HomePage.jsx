@@ -54,10 +54,10 @@ const HomePage = () => {
         </Link>
 
         <Link
-          to="#explore"
+          to="/funfacts"
           className="px-10 py-4 bg-white/80 backdrop-blur border border-slate-300 text-slate-700 rounded-full hover:bg-white transition-all"
         >
-          Explore the Commons
+          Explore Fun Facts
         </Link>
       </div>
     </FadeIn>
