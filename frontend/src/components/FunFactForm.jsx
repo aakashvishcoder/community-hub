@@ -51,7 +51,7 @@ const FunFactForm = ({ onSubmit, onCancel, error }) => {
                 name="title"
                 value={formData.title}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                 required
               />
             </div>
@@ -64,7 +64,7 @@ const FunFactForm = ({ onSubmit, onCancel, error }) => {
                 name="category"
                 value={formData.category}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                 required
               >
                 {categories.map(cat => (
@@ -82,7 +82,7 @@ const FunFactForm = ({ onSubmit, onCancel, error }) => {
                 value={formData.content}
                 onChange={handleChange}
                 rows="4"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                 required
               />
             </div>
@@ -91,13 +91,13 @@ const FunFactForm = ({ onSubmit, onCancel, error }) => {
               <button
                 type="button"
                 onClick={onCancel}
-                className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 rounded-lg"
+                className="flex-1 bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-medium py-2 rounded-lg"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-lg"
+                className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 rounded-lg"
               >
                 Submit Fact
               </button>

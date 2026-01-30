@@ -177,10 +177,14 @@ export const UserProvider = ({ children }) => {
       if (response.ok) {
         const newPost = await response.json();
         setPosts((prev) => [newPost, ...prev]);
-      } else if (response.status === 404) {
-        console.error('User not found on backend');
+      } else if (response.status === 401) {
+
+        console.error('Session expired or unauthorized. Logging out.');
         setUser(null);
         localStorage.removeItem('communityHubUser');
+      } else if (response.status === 404) {
+
+        console.error('User not found on backend (404).');
       } else {
         console.error('Failed to add post:', response.statusText);
       }
@@ -214,10 +218,14 @@ export const UserProvider = ({ children }) => {
         setPosts((prev) =>
           prev.map((post) => (post._id === postId ? updatedPost : post))
         );
-      } else if (response.status === 404) {
-        console.error('User or post not found');
+      } else if (response.status === 401) {
+
+        console.error('Session expired or unauthorized. Logging out.');
         setUser(null);
         localStorage.removeItem('communityHubUser');
+      } else if (response.status === 404) {
+
+        console.error('User or post not found (404).');
       }
     } catch (error) {
       console.error('Error adding reply:', error);
@@ -247,17 +255,21 @@ export const UserProvider = ({ children }) => {
         setPosts((prev) =>
           prev.map((post) => (post._id === postId ? updatedPost : post))
         );
-      } else if (response.status === 404) {
-        console.error('User or post not found');
+      } else if (response.status === 401) {
+
+        console.error('Session expired or unauthorized. Logging out.');
         setUser(null);
         localStorage.removeItem('communityHubUser');
+      } else if (response.status === 404) {
+
+        console.error('User or post not found (404).');
       }
     } catch (error) {
       console.error('Error liking post:', error);
     }
   };
 
-  // Fetch posts from backend
+
   const fetchPosts = async () => {
     try {
       const response = await fetch(`${BACKEND_URL}/api/posts`);

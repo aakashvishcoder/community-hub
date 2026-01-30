@@ -207,10 +207,14 @@ const PlacesPage = () => {
   const loadPlaces = async () => {
     try {
       const category = getActiveCategory();
-      const params = category !== 'all' ? `?category=${category}` : '';
-      
+      if (category === 'all') {
+        // Always use mockPlaces for 'all' category
+        setPlaces(mockPlaces);
+        setLoading(false);
+        return;
+      }
+      const params = `?category=${category}`;
       const response = await fetch(`${BACKEND_URL}/api/places${params}`);
-      
       if (response.ok) {
         const placesData = await response.json();
         if (Array.isArray(placesData) && placesData.length > 0) {

@@ -1,4 +1,6 @@
+
 import { useState, useEffect } from 'react';
+import FadeIn from '../components/FadeIn';
 
 const WeatherPage = () => {
   const [weather, setWeather] = useState(null);
@@ -29,78 +31,96 @@ const WeatherPage = () => {
 
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
-        <h1 className="text-3xl font-bold text-gray-900 mb-6">McKinney Weather</h1>
-        <div className="text-center py-12">
-          <div className="animate-pulse text-gray-500">Loading weather...</div>
+      <div className="relative min-h-screen bg-[#f7f8f5] text-slate-800 font-inter overflow-hidden">
+        <div className="absolute inset-0 z-0" style={{
+          backgroundImage: "url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=3000&q=90')",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          opacity: 0.25
+        }} />
+        <div className="absolute inset-0 z-10 bg-gradient-to-b from-transparent via-[#f7f8f5]/70 to-[#f7f8f5]" />
+        <div className="relative z-20 max-w-3xl mx-auto px-4 py-24 text-center">
+          <FadeIn>
+            <h1 className="text-4xl font-libre font-bold text-slate-900 mb-6">McKinney Weather</h1>
+            <div className="text-center py-12">
+              <div className="animate-pulse text-slate-500">Loading weather...</div>
+            </div>
+          </FadeIn>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl">
-      <h1 className="text-3xl font-bold text-gray-900 mb-6">McKinney Weather</h1>
-      
-      {error ? (
-        <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded">
-          <p className="text-red-700">{error}</p>
-        </div>
-      ) : weather && (
-        <div className="bg-white rounded-2xl shadow-card p-6 md:p-8">
-          <div className="text-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">{weather.name}, {weather.sys.country}</h2>
-            <p className="text-gray-600">{new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
-          </div>
-          
-          <div className="flex flex-col items-center justify-center mb-8">
-            <div className="text-6xl font-bold text-gray-900 mb-2">
-              {Math.round(weather.main.temp)}°F
+    <div className="relative min-h-screen bg-[#f7f8f5] text-slate-800 font-inter overflow-hidden">
+      <div className="absolute inset-0 z-0" style={{
+        backgroundImage: "url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=3000&q=90')",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        opacity: 0.25
+      }} />
+      <div className="absolute inset-0 z-10 bg-gradient-to-b from-transparent via-[#f7f8f5]/70 to-[#f7f8f5]" />
+      <div className="relative z-20 max-w-3xl mx-auto px-4 py-24 text-center">
+        <FadeIn>
+          <h1 className="text-4xl font-libre font-bold text-slate-900 mb-6">McKinney Weather</h1>
+          {error ? (
+            <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded">
+              <p className="text-red-700">{error}</p>
             </div>
-            <div className="flex items-center space-x-4 mb-4">
-              <img 
-                src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} 
-                alt={weather.weather[0].description}
-                className="w-16 h-16"
-              />
-              <span className="text-xl text-gray-700 capitalize">{weather.weather[0].description}</span>
-            </div>
-          </div>
-          
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-gray-50 p-4 rounded-lg text-center">
-              <p className="text-sm text-gray-600 mb-1">Feels Like</p>
-              <p className="text-lg font-semibold text-gray-900">{Math.round(weather.main.feels_like)}°F</p>
-            </div>
-            <div className="bg-gray-50 p-4 rounded-lg text-center">
-              <p className="text-sm text-gray-600 mb-1">Humidity</p>
-              <p className="text-lg font-semibold text-gray-900">{weather.main.humidity}%</p>
-            </div>
-            <div className="bg-gray-50 p-4 rounded-lg text-center">
-              <p className="text-sm text-gray-600 mb-1">Wind</p>
-              <p className="text-lg font-semibold text-gray-900">{Math.round(weather.wind.speed)} mph</p>
-            </div>
-            <div className="bg-gray-50 p-4 rounded-lg text-center">
-              <p className="text-sm text-gray-600 mb-1">Pressure</p>
-              <p className="text-lg font-semibold text-gray-900">{weather.main.pressure} hPa</p>
-            </div>
-          </div>
-          
-          <div className="mt-8 pt-6 border-t border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Today's Forecast</h3>
-            <div className="flex justify-between items-center">
-              <div>
-                <p className="text-sm text-gray-600">High</p>
-                <p className="text-lg font-semibold text-gray-900">{Math.round(weather.main.temp_max)}°F</p>
+          ) : weather && (
+            <div className="bg-white/90 rounded-2xl shadow-card p-6 md:p-8">
+              <div className="text-center mb-6">
+                <h2 className="text-2xl font-bold text-slate-900 mb-2">{weather.name}, {weather.sys.country}</h2>
+                <p className="text-slate-600">{new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
               </div>
-              <div>
-                <p className="text-sm text-gray-600">Low</p>
-                <p className="text-lg font-semibold text-gray-900">{Math.round(weather.main.temp_min)}°F</p>
+              <div className="flex flex-col items-center justify-center mb-8">
+                <div className="text-6xl font-bold text-slate-900 mb-2">
+                  {Math.round(weather.main.temp)}°F
+                </div>
+                <div className="flex items-center space-x-4 mb-4">
+                  <img 
+                    src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} 
+                    alt={weather.weather[0].description}
+                    className="w-16 h-16"
+                  />
+                  <span className="text-xl text-slate-700 capitalize">{weather.weather[0].description}</span>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="bg-slate-50 p-4 rounded-lg text-center">
+                  <p className="text-sm text-slate-600 mb-1">Feels Like</p>
+                  <p className="text-lg font-semibold text-slate-900">{Math.round(weather.main.feels_like)}°F</p>
+                </div>
+                <div className="bg-slate-50 p-4 rounded-lg text-center">
+                  <p className="text-sm text-slate-600 mb-1">Humidity</p>
+                  <p className="text-lg font-semibold text-slate-900">{weather.main.humidity}%</p>
+                </div>
+                <div className="bg-slate-50 p-4 rounded-lg text-center">
+                  <p className="text-sm text-slate-600 mb-1">Wind</p>
+                  <p className="text-lg font-semibold text-slate-900">{Math.round(weather.wind.speed)} mph</p>
+                </div>
+                <div className="bg-slate-50 p-4 rounded-lg text-center">
+                  <p className="text-sm text-slate-600 mb-1">Pressure</p>
+                  <p className="text-lg font-semibold text-slate-900">{weather.main.pressure} hPa</p>
+                </div>
+              </div>
+              <div className="mt-8 pt-6 border-t border-slate-200">
+                <h3 className="text-lg font-semibold text-slate-900 mb-4">Today's Forecast</h3>
+                <div className="flex justify-between items-center">
+                  <div>
+                    <p className="text-sm text-slate-600">High</p>
+                    <p className="text-lg font-semibold text-slate-900">{Math.round(weather.main.temp_max)}°F</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-slate-600">Low</p>
+                    <p className="text-lg font-semibold text-slate-900">{Math.round(weather.main.temp_min)}°F</p>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-      )}
+          )}
+        </FadeIn>
+      </div>
     </div>
   );
 };

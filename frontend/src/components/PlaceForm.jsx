@@ -98,7 +98,7 @@ const PlaceForm = ({ onSubmit, onCancel, error }) => {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                 required
               />
             </div>
@@ -111,7 +111,7 @@ const PlaceForm = ({ onSubmit, onCancel, error }) => {
                 name="type"
                 value={formData.type}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                 required
               >
                 {types.map(type => (
@@ -129,7 +129,7 @@ const PlaceForm = ({ onSubmit, onCancel, error }) => {
                 value={formData.address}
                 onChange={handleChange}
                 rows="2"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                 required
               />
             </div>
@@ -142,8 +142,8 @@ const PlaceForm = ({ onSubmit, onCancel, error }) => {
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
-                rows="3"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500"
+                rows="4"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                 required
               />
             </div>
@@ -158,7 +158,7 @@ const PlaceForm = ({ onSubmit, onCancel, error }) => {
                 value={formData.hours}
                 onChange={handleChange}
                 placeholder="e.g., Mon-Fri: 9AM-5PM"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
               />
             </div>
             
@@ -172,7 +172,7 @@ const PlaceForm = ({ onSubmit, onCancel, error }) => {
                 value={formData.website}
                 onChange={handleChange}
                 placeholder="https://example.com"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
               />
             </div>
             
@@ -180,7 +180,7 @@ const PlaceForm = ({ onSubmit, onCancel, error }) => {
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Place Image (optional)
               </label>
-              <label className="cursor-pointer bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-lg text-sm font-medium inline-block">
+              <label className="cursor-pointer bg-emerald-50 hover:bg-emerald-100 text-emerald-700 px-3 py-2 rounded-lg text-sm font-medium inline-block">
                 {imagePreview ? 'Change Image' : 'Upload Image'}
                 <input
                   type="file"
@@ -215,13 +215,13 @@ const PlaceForm = ({ onSubmit, onCancel, error }) => {
               <button
                 type="button"
                 onClick={onCancel}
-                className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 rounded-lg"
+                className="flex-1 bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-medium py-2 rounded-lg"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-lg"
+                className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 rounded-lg"
                 >
                 Submit Place
                 </button>

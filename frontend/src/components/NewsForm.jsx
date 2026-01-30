@@ -96,7 +96,7 @@ const NewsForm = ({ onSubmit, onCancel, error }) => {
                 name="title"
                 value={formData.title}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                 required
               />
             </div>
@@ -111,7 +111,7 @@ const NewsForm = ({ onSubmit, onCancel, error }) => {
                   name="date"
                   value={formData.date}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                   required
                 />
               </div>
@@ -124,7 +124,7 @@ const NewsForm = ({ onSubmit, onCancel, error }) => {
                   name="category"
                   value={formData.category}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                   required
                 >
                   {categories.map(cat => (
@@ -143,7 +143,7 @@ const NewsForm = ({ onSubmit, onCancel, error }) => {
                 value={formData.excerpt}
                 onChange={handleChange}
                 rows="2"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                 required
               />
             </div>
@@ -157,7 +157,7 @@ const NewsForm = ({ onSubmit, onCancel, error }) => {
                 value={formData.content}
                 onChange={handleChange}
                 rows="6"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                 required
               />
             </div>
@@ -172,7 +172,7 @@ const NewsForm = ({ onSubmit, onCancel, error }) => {
                   name="featured"
                   checked={formData.featured}
                   onChange={handleChange}
-                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  className="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
                 />
                 <span className="ml-2 text-sm text-gray-700">Mark as featured article</span>
               </label>
@@ -182,7 +182,7 @@ const NewsForm = ({ onSubmit, onCancel, error }) => {
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Article Image (optional)
               </label>
-              <label className="cursor-pointer bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-lg text-sm font-medium inline-block">
+              <label className="cursor-pointer bg-emerald-50 hover:bg-emerald-100 text-emerald-700 px-3 py-2 rounded-lg text-sm font-medium inline-block">
                 {imagePreview ? 'Change Image' : 'Upload Image'}
                 <input
                   type="file"
@@ -217,13 +217,13 @@ const NewsForm = ({ onSubmit, onCancel, error }) => {
               <button
                 type="button"
                 onClick={onCancel}
-                className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 rounded-lg"
+                className="flex-1 bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-medium py-2 rounded-lg"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-lg"
+                className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 rounded-lg"
               >
                 Submit News
               </button>

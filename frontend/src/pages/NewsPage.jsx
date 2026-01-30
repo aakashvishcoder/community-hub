@@ -34,11 +34,11 @@ const NewsPage = () => {
  
   const getCategoryColor = (cat) => {
     const colors = {
-      Community: 'bg-blue-100 text-blue-700',
-      Resources: 'bg-green-100 text-green-700',
-      Education: 'bg-purple-100 text-purple-700',
-      Events: 'bg-orange-100 text-orange-700',
-      Announcements: 'bg-red-100 text-red-700',
+      Community: 'bg-green-100 text-green-700',
+      Resources: 'bg-green-200 text-green-800',
+      Education: 'bg-lime-100 text-lime-700',
+      Events: 'bg-emerald-100 text-emerald-700',
+      Announcements: 'bg-teal-100 text-teal-700',
       default: 'bg-gray-100 text-gray-700'
     };
     return colors[cat] || colors.default;
@@ -144,32 +144,32 @@ const NewsPage = () => {
 
   return (
     
-    <div className="min-h-screen bg-blue-50 py-12 px-4 transition-colors duration-500">
+    <div className="min-h-screen bg-green-50 py-12 px-4 transition-colors duration-500">
       <div className="max-w-7xl mx-auto">
         
       
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-extrabold text-gray-900 mb-4 tracking-tight">Dallas City News</h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <h1 className="text-4xl font-extrabold text-green-900 mb-4 tracking-tight">Dallas City News</h1>
+          <p className="text-lg text-green-700 max-w-2xl mx-auto">
             The latest updates and community stories from across the city.
           </p>
         </div>
 
       
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-10">
+        <div className="bg-white rounded-2xl shadow-sm border border-green-100 p-6 mb-10">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <input
               type="text"
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
               placeholder="Search news..."
-              className="px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+              className="px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 outline-none"
             />
 
             <select
               value={selectedCategory}
               onChange={e => setSelectedCategory(e.target.value)}
-              className="px-4 py-2.5 border border-gray-200 rounded-xl bg-white text-gray-700 outline-none focus:ring-2 focus:ring-blue-500"
+              className="px-4 py-2.5 border border-gray-200 rounded-xl bg-white text-gray-700 outline-none focus:ring-2 focus:ring-green-500"
             >
               {categories.map(c => (
                 <option key={c} value={c}>{c === 'all' ? 'All Categories' : c}</option>
@@ -179,7 +179,7 @@ const NewsPage = () => {
             {user && (
               <button
                 onClick={() => setShowForm(true)}
-                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-xl transition-all shadow-md shadow-blue-100"
+                className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2.5 rounded-xl transition-all shadow-md shadow-green-100"
               >
                 Submit News
               </button>
@@ -190,7 +190,7 @@ const NewsPage = () => {
        
         {loading ? (
           <div className="flex justify-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -211,12 +211,12 @@ const NewsPage = () => {
 
                   <div className="p-5 flex flex-col flex-1">
                     <div className="flex justify-between items-center text-xs text-gray-500 mb-3">
-                      <span className="font-medium text-blue-600">{article.external ? article.source : 'Community Post'}</span>
+                      <span className="font-medium text-green-600">{article.external ? article.source : 'Community Post'}</span>
                       <span>{new Date(article.date).toLocaleDateString()}</span>
                     </div>
-                    <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-blue-600">{article.title}</h3>
-                    <p className="text-sm text-gray-600 line-clamp-3">{article.excerpt}</p>
-                    <div className="mt-auto pt-4 flex items-center text-blue-600 font-bold text-xs uppercase tracking-widest">
+                    <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-green-600">{article.title}</h3>
+                    <p className="text-sm text-green-700 line-clamp-3">{article.excerpt}</p>
+                    <div className="mt-auto pt-4 flex items-center text-green-600 font-bold text-xs uppercase tracking-widest">
                       Read More
                       <svg className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />

@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useUser } from '../contexts/UserContext';
 import { Link } from 'react-router-dom';
-import FadeIn from '../components/FadeIn';
 
 const CommunityFeedPage = () => {
   const { 
@@ -14,54 +13,44 @@ const CommunityFeedPage = () => {
     closeProfileModal,
     viewedUser,
     isProfileModalOpen,
-    fetchPosts
+    fetchPosts 
   } = useUser();
-  // ...existing hooks and functions...
-  // ...existing code...
-  return (
-    <div className="relative min-h-screen bg-[#f7f8f5] text-slate-800 font-inter overflow-hidden">
-      <div className="absolute inset-0 z-0" style={{
-        backgroundImage: "url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=3000&q=90')",
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        opacity: 0.25
-      }} />
-      <div className="absolute inset-0 z-10 bg-gradient-to-b from-transparent via-[#f7f8f5]/70 to-[#f7f8f5]" />
-      <div className="relative z-20 max-w-3xl mx-auto px-4 py-16 text-center">
-        <FadeIn>
-          <h1 className="font-libre text-4xl md:text-5xl text-slate-900 leading-tight mb-8 tracking-tight">Community Feed</h1>
-          <p className="text-lg md:text-xl text-slate-700 max-w-2xl mx-auto leading-relaxed mb-12">
-            See what your neighbors are sharing, asking, and celebrating in real time.
-          </p>
-        </FadeIn>
-        <>
-          {user ? (
-            <div className="bg-white rounded-2xl shadow-sm border border-emerald-200 p-5 mb-8">
-              {/* ...existing code... */}
-            </div>
-          ) : (
-            <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-8 rounded-xl shadow-sm">
-              {/* ...existing code... */}
-            </div>
-          )}
-          {posts.length === 0 ? (
-            <div className="text-center py-12">
-                {/* ...existing code... */}
-              </div>
-            ) : (
-              <div className="space-y-6">
-                {/* ...existing code... */}
-              </div>
-            )}
-            {isProfileModalOpen && viewedUser && (
-              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-                {/* ...existing code... */}
-              </div>
-            )}
-          </>
-        </div>
-      </div>
-    );
+
+    useEffect(() => {
+      const interval = setInterval(() => {
+        if (fetchPosts) fetchPosts();
+      }, 5000);
+      return () => clearInterval(interval);
+    }, [fetchPosts]);
+  
+  const [newPost, setNewPost] = useState('');
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [replyingTo, setReplyingTo] = useState(null);
+  const [replyText, setReplyText] = useState('');
+  const [replyImageFile, setReplyImageFile] = useState(null);
+  const [replyImagePreview, setReplyImagePreview] = useState('');
+
+  const fileToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+    });
+  };
+
+  const handleImageChange = async (e, isReply = false) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    if (!file.type.startsWith('image/')) {
+      setError('Please select an image file (jpg, png, gif)');
+      return;
+    }
+    
     if (file.size > 5 * 1024 * 1024) {
       setError('Image must be smaller than 5MB');
       return;
@@ -205,29 +194,22 @@ const CommunityFeedPage = () => {
     );
   };
 
-  return (
-    <div className="relative min-h-screen bg-[#f7f8f5] text-slate-800 font-inter overflow-hidden">
-      <div className="absolute inset-0 z-0" style={{
-        backgroundImage: "url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=3000&q=90')",
+    return (
+      <div className="relative min-h-screen w-full font-inter overflow-x-hidden overflow-y-auto" style={{
+        background: `linear-gradient(to bottom, rgba(247,248,245,0.95) 0%, rgba(233,239,231,0.93) 60%, rgba(191,210,187,0.90) 100%), url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=3000&q=90')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        opacity: 0.25
-      }} />
-      <div className="absolute inset-0 z-10 bg-gradient-to-b from-transparent via-[#f7f8f5]/70 to-[#f7f8f5]" />
-      <div className="relative z-20 max-w-3xl mx-auto px-4 py-16 text-center">
-        <FadeIn>
-          <h1 className="font-libre text-4xl md:text-5xl text-slate-900 leading-tight mb-8 tracking-tight">Community Feed</h1>
-          <p className="text-lg md:text-xl text-slate-700 max-w-2xl mx-auto leading-relaxed mb-12">
-            See what your neighbors are sharing, asking, and celebrating in real time.
-          </p>
-        </FadeIn>
+        backgroundAttachment: 'fixed',
+      }}>
+        <div className="relative z-20 max-w-3xl mx-auto px-4 py-12">
+          <h1 className="text-3xl font-libre font-extrabold text-[#3f4f46] mb-8 tracking-tight text-center drop-shadow-sm">Community Feed</h1>
       
       {user ? (
-        <div className="bg-white rounded-2xl shadow-sm border border-emerald-200 p-5 mb-8">
+        <div className="bg-white/90 rounded-2xl shadow-lg border border-[#dbe5d7] p-6 mb-10 backdrop-blur-sm">
           <div className="flex items-start space-x-3">
             <button 
               onClick={() => showUserProfile(user.id)}
-              className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold hover:opacity-75"
+              className="w-10 h-10 rounded-full bg-[#e9efe7] flex items-center justify-center text-[#5f7c65] font-bold hover:opacity-80 shadow"
             >
               {user.profilePicture ? (
                 <img 
@@ -245,7 +227,7 @@ const CommunityFeedPage = () => {
                 value={newPost}
                 onChange={(e) => setNewPost(e.target.value)}
                 placeholder={`What's on your mind, ${user.displayName || user.username || 'friend'}?`}
-                className="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent resize-none"
+                className="w-full p-3 border border-[#dbe5d7] rounded-xl focus:ring-2 focus:ring-[#5f7c65] focus:border-transparent resize-none bg-[#f3f6f2]/60 placeholder:text-[#a3b7a6] text-[#3f4f46]"
                 rows="3"
               />
               
@@ -254,7 +236,7 @@ const CommunityFeedPage = () => {
                   <img 
                     src={imagePreview} 
                     alt="Preview" 
-                    className="max-h-48 max-w-full rounded object-contain border border-gray-300"
+                    className="max-h-48 max-w-full rounded object-contain border border-[#dbe5d7] shadow"
                   />
                   <button
                     type="button"
@@ -262,7 +244,7 @@ const CommunityFeedPage = () => {
                       setImageFile(null);
                       setImagePreview('');
                     }}
-                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center hover:bg-red-600 text-xs"
+                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center hover:bg-red-600 text-xs shadow"
                   >
                     ×
                   </button>
@@ -270,7 +252,7 @@ const CommunityFeedPage = () => {
               )}
               
               <div className="mt-2 flex justify-between items-center">
-                <label className="cursor-pointer bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded text-sm font-medium">
+                <label className="cursor-pointer bg-[#e9efe7] hover:bg-[#dce6da] text-[#5f7c65] px-3 py-1 rounded text-sm font-medium shadow-sm">
                   {imagePreview ? 'Change Image' : 'Add Image'}
                   <input
                     type="file"
@@ -279,11 +261,10 @@ const CommunityFeedPage = () => {
                     className="hidden"
                   />
                 </label>
-                
                 <button
                   type="submit"
                   disabled={(newPost.trim() === '' && !imagePreview) || loading}
-                  className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 px-4 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="bg-[#5f7c65] hover:bg-[#4f6a55] text-white font-semibold py-2 px-5 rounded-xl shadow-md disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                 >
                   {loading ? 'Posting...' : 'Post'}
                 </button>
@@ -296,26 +277,26 @@ const CommunityFeedPage = () => {
           </div>
         </div>
       ) : (
-        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-8 rounded-xl shadow-sm">
-          <p className="text-yellow-700">
-            <Link to="/auth" className="font-medium text-yellow-800 hover:underline">Sign in</Link> to join the conversation!
+        <div className="bg-[#f3f6f2] border-l-4 border-[#dbe5d7] p-4 mb-8">
+          <p className="text-[#5f7c65]">
+            <Link to="/auth" className="font-medium text-[#3f4f46] hover:underline">Sign in</Link> to join the conversation!
           </p>
         </div>
       )}
 
       {posts.length === 0 ? (
         <div className="text-center py-12">
-          <div className="text-gray-400 mb-4 text-xl">No posts yet</div>
-          <p className="text-gray-600 text-lg">Be the first to share something with your community!</p>
+          <div className="text-[#dbe5d7] mb-4">No posts yet</div>
+          <p className="text-[#5f7c65]">Be the first to share something with your community!</p>
         </div>
       ) : (
-        <div className="space-y-6">
+        <div className="space-y-7">
           {posts.map(post => (
-            <div key={post._id} className="bg-white rounded-2xl shadow-sm border border-emerald-200 p-5">
+            <div key={post._id} className="bg-white/90 rounded-2xl shadow-md border border-[#dbe5d7] p-6 hover:shadow-lg transition-all">
               <div className="flex items-start space-x-3">
                 <button 
                   onClick={() => showUserProfile(post.userId)}
-                  className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 font-bold hover:opacity-75"
+                  className="w-10 h-10 rounded-full bg-[#e9efe7] flex items-center justify-center text-[#5f7c65] font-bold hover:opacity-80 shadow"
                 >
                   {post.profilePicture ? (
                     <img 
@@ -332,17 +313,17 @@ const CommunityFeedPage = () => {
                   <div className="flex items-center space-x-2 mb-2">
                     <button 
                       onClick={() => showUserProfile(post.userId)}
-                      className="font-bold text-gray-900 hover:underline"
+                      className="font-bold text-[#3f4f46] hover:underline"
                     >
                       {post.displayName}
                     </button>
-                    <span className="text-gray-500 text-sm">@{post.username}</span>
-                    <span className="text-gray-400">·</span>
-                    <span className="text-gray-500 text-sm">{formatTime(post.timestamp)}</span>
+                    <span className="text-[#5f7c65] text-sm">@{post.username}</span>
+                    <span className="text-[#dbe5d7]">·</span>
+                    <span className="text-[#5f7c65] text-sm">{formatTime(post.timestamp)}</span>
                   </div>
                   
                   {post.content && (
-                    <p className="text-gray-800 whitespace-pre-wrap mb-3">{post.content}</p>
+                    <p className="text-[#3f4f46] whitespace-pre-wrap mb-3">{post.content}</p>
                   )}
                   
                   {post.imageUrl && (
@@ -350,7 +331,7 @@ const CommunityFeedPage = () => {
                       <img 
                         src={post.imageUrl} 
                         alt="Post content" 
-                        className="max-h-96 w-full rounded-lg object-cover border border-gray-200"
+                        className="max-h-96 w-full rounded-lg object-cover border border-[#dbe5d7] shadow"
                         onError={(e) => {
                           e.target.style.display = 'none';
                         }}
@@ -361,10 +342,10 @@ const CommunityFeedPage = () => {
                   <div className="flex items-center space-x-4 mt-3">
                     <button
                       onClick={() => likePost(post._id)}
-                      className={`flex items-center space-x-1 text-sm font-medium ${
+                      className={`flex items-center space-x-1 text-sm font-semibold ${
                         post.likedBy?.includes(user?.id) 
                           ? 'text-red-500' 
-                          : 'text-gray-500 hover:text-red-500'
+                          : 'text-[#b7cbbf] hover:text-red-500'
                       }`}
                     >
                       <svg 
@@ -381,7 +362,7 @@ const CommunityFeedPage = () => {
                     
                     <button
                       onClick={() => startReply(post._id, post.username)}
-                      className="text-gray-500 hover:text-emerald-600 text-sm font-medium flex items-center space-x-1"
+                      className="text-[#5f7c65] hover:text-[#3f4f46] text-sm font-semibold flex items-center space-x-1"
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
@@ -393,11 +374,11 @@ const CommunityFeedPage = () => {
                   {renderReplies(post.replies)}
 
                   {replyingTo === post._id && (
-                    <div className="mt-4 ml-8 pl-4 border-l-2 border-emerald-200">
+                    <div className="mt-4 ml-8 pl-4 border-l-2 border-[#dbe5d7]">
                       <div className="flex items-start space-x-2">
                         <button 
                           onClick={() => showUserProfile(user.id)}
-                          className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold text-xs hover:opacity-75"
+                          className="w-8 h-8 rounded-full bg-[#e9efe7] flex items-center justify-center text-[#5f7c65] font-bold text-xs hover:opacity-80 shadow"
                         >
                           {user.profilePicture ? (
                             <img 
@@ -416,7 +397,7 @@ const CommunityFeedPage = () => {
                               value={replyText}
                               onChange={(e) => setReplyText(e.target.value)}
                               placeholder="Write a reply..."
-                              className="w-full p-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent resize-none"
+                              className="w-full p-2 text-sm border border-[#dbe5d7] rounded-lg focus:ring-2 focus:ring-[#5f7c65] focus:border-transparent resize-none bg-[#f3f6f2]/60 placeholder:text-[#a3b7a6] text-[#3f4f46]"
                               rows="2"
                             />
                             
@@ -425,7 +406,7 @@ const CommunityFeedPage = () => {
                                 <img 
                                   src={replyImagePreview} 
                                   alt="Reply preview" 
-                                  className="max-h-48 max-w-full rounded object-contain border border-gray-300"
+                                  className="max-h-48 max-w-full rounded object-contain border border-[#dbe5d7] shadow"
                                 />
                                 <button
                                   type="button"
@@ -433,7 +414,7 @@ const CommunityFeedPage = () => {
                                     setReplyImageFile(null);
                                     setReplyImagePreview('');
                                   }}
-                                  className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center hover:bg-red-600 text-[8px]"
+                                  className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center hover:bg-red-600 text-[8px] shadow"
                                 >
                                   ×
                                 </button>
@@ -441,7 +422,7 @@ const CommunityFeedPage = () => {
                             )}
                             
                             <div className="flex justify-between items-center">
-                              <label className="cursor-pointer bg-gray-100 hover:bg-gray-200 text-gray-600 px-2 py-1 rounded text-xs font-medium">
+                              <label className="cursor-pointer bg-[#e9efe7] hover:bg-[#dce6da] text-[#5f7c65] px-2 py-1 rounded text-xs font-medium shadow-sm">
                                 {replyImagePreview ? 'Change' : 'Add Image'}
                                 <input
                                   type="file"
@@ -450,19 +431,18 @@ const CommunityFeedPage = () => {
                                   className="hidden"
                                 />
                               </label>
-                              
                               <div className="flex space-x-2">
                                 <button
                                   type="button"
                                   onClick={cancelReply}
-                                  className="text-gray-600 hover:text-gray-800 text-sm font-medium px-2 py-1"
+                                  className="text-[#5f7c65] hover:text-[#3f4f46] text-sm font-medium px-2 py-1"
                                 >
                                   Cancel
                                 </button>
                                 <button
                                   type="submit"
                                   disabled={(replyText.trim() === '' && !replyImagePreview)}
-                                  className="bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium px-2 py-1 rounded disabled:opacity-50"
+                                  className="bg-[#5f7c65] hover:bg-[#4f6a55] text-white text-sm font-semibold px-2 py-1 rounded shadow-md disabled:opacity-50"
                                 >
                                   Reply
                                 </button>
@@ -481,52 +461,51 @@ const CommunityFeedPage = () => {
       )}
 
       {isProfileModalOpen && viewedUser && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-[#3f4f46]/40 flex items-center justify-center z-50 p-4">
+          <div className="bg-white/95 rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-[#dbe5d7]">
             <div className="p-6">
               <div className="flex justify-between items-start mb-4">
-                <h2 className="text-xl font-bold">Profile</h2>
+                <h2 className="text-xl font-bold text-[#3f4f46]">Profile</h2>
                 <button 
                   onClick={closeProfileModal}
-                  className="text-gray-500 hover:text-gray-700 text-2xl"
+                  className="text-[#b7cbbf] hover:text-[#3f4f46] text-2xl"
                 >
                   ×
                 </button>
               </div>
-              
               <div className="flex flex-col items-center mb-4">
                 {viewedUser.profilePicture ? (
                   <img 
                     src={viewedUser.profilePicture} 
                     alt={viewedUser.displayName} 
-                    className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md"
+                    className="w-24 h-24 rounded-full object-cover border-4 border-[#e9efe7] shadow-md"
                   />
                 ) : (
-                  <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
+                  <div className="w-24 h-24 rounded-full bg-[#e9efe7] flex items-center justify-center text-[#b7cbbf]">
                     <span className="text-2xl font-bold">
                       {viewedUser.displayName?.[0]?.toUpperCase() || '?'}
                     </span>
                   </div>
                 )}
-                <h3 className="text-lg font-bold mt-3">{viewedUser.displayName}</h3>
-                <p className="text-gray-600">@{viewedUser.username}</p>
+                <h3 className="text-lg font-bold mt-3 text-[#3f4f46]">{viewedUser.displayName}</h3>
+                <p className="text-[#5f7c65]">@{viewedUser.username}</p>
               </div>
               {viewedUser.bio && (
                 <div className="mb-4">
-                  <h4 className="font-semibold text-gray-900 mb-1">About</h4>
-                  <p className="text-gray-700">{viewedUser.bio}</p>
+                  <h4 className="font-semibold text-[#3f4f46] mb-1">About</h4>
+                  <p className="text-[#5f7c65]">{viewedUser.bio}</p>
                 </div>
               )}
               {(viewedUser.socials?.website || viewedUser.socials?.instagram || viewedUser.socials?.linkedin) && (
                 <div className="mb-4">
-                  <h4 className="font-semibold text-gray-900 mb-2">Social Links</h4>
+                  <h4 className="font-semibold text-[#3f4f46] mb-2">Social Links</h4>
                   <div className="space-y-1">
                     {viewedUser.socials.website && (
                       <a 
                         href={viewedUser.socials.website} 
                         target="_blank" 
                         rel="noopener noreferrer"
-                        className="text-emerald-600 hover:text-emerald-800 block"
+                        className="text-[#5f7c65] hover:text-[#3f4f46] block"
                       >
                         Website
                       </a>
@@ -536,7 +515,7 @@ const CommunityFeedPage = () => {
                         href={`https://instagram.com/${viewedUser.socials.instagram.replace('@', '')}`} 
                         target="_blank" 
                         rel="noopener noreferrer"
-                        className="text-emerald-600 hover:text-emerald-800 block"
+                        className="text-[#5f7c65] hover:text-[#3f4f46] block"
                       >
                         Instagram: {viewedUser.socials.instagram}
                       </a>
@@ -548,7 +527,7 @@ const CommunityFeedPage = () => {
                           : `https://linkedin.com/in/${viewedUser.socials.linkedin}`}
                         target="_blank" 
                         rel="noopener noreferrer"
-                        className="text-emerald-600 hover:text-emerald-800 block"
+                        className="text-[#5f7c65] hover:text-[#3f4f46] block"
                       >
                         LinkedIn
                       </a>
@@ -556,14 +535,14 @@ const CommunityFeedPage = () => {
                   </div>
                 </div>
               )}
-              <div className="text-sm text-gray-500">
+              <div className="text-sm text-[#b7cbbf]">
                 Joined {new Date(viewedUser.createdAt).toLocaleDateString()}
               </div>
             </div>
-            <div className="p-4 border-t border-gray-200">
+            <div className="p-4 border-t border-[#dbe5d7]">
               <button
                 onClick={closeProfileModal}
-                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 rounded-lg"
+                className="w-full bg-[#5f7c65] hover:bg-[#4f6a55] text-white font-semibold py-2 rounded-lg shadow"
               >
                 Close
               </button>
@@ -571,6 +550,7 @@ const CommunityFeedPage = () => {
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 };

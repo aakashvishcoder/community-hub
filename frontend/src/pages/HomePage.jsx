@@ -66,7 +66,7 @@ const HomePage = () => {
 <section className="py-32 bg-[#f1f5f0]">
   <div className="max-w-6xl mx-auto px-6">
 
-    {/* Section Header */}
+
     <FadeIn className="mb-20 max-w-3xl">
       <h2 className="font-libre text-3xl md:text-4xl text-slate-900 mb-6 tracking-tight">
         McKinney Highlights
@@ -76,7 +76,7 @@ const HomePage = () => {
       </p>
     </FadeIn>
 
-    {/* Highlight Cards */}
+
     <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
 
       {[
@@ -108,7 +108,7 @@ const HomePage = () => {
         <FadeIn key={place.name} delay={i * 0.15}>
           <div className="group bg-[#e9efe7] rounded-3xl overflow-hidden border border-[#dbe5d7] shadow-md hover:shadow-lg transition-all h-full flex flex-col">
             
-            {/* Image */}
+
             <div className="h-52 overflow-hidden">
               <img
                 src={place.image}
@@ -117,7 +117,7 @@ const HomePage = () => {
               />
             </div>
 
-            {/* Content */}
+
             <div className="p-6 flex flex-col flex-grow">
               <span className="text-xs uppercase tracking-wide text-[#5f7c65] font-medium mb-2">
                 {place.type}

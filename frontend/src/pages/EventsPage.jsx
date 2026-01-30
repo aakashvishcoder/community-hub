@@ -87,11 +87,37 @@ const EventsPage = () => {
 
   useEffect(() => { loadEvents(); }, [searchTerm, selectedCategory]);
 
+  // Add event handler
+  const handleCreateEvent = async (eventData) => {
+    setError("");
+    try {
+      if (!user || !user._id) {
+        setError("You must be signed in to add an event.");
+        return;
+      }
+      const eventWithUser = { ...eventData, userId: user._id };
+      const res = await fetch(`${BACKEND_URL}/api/events`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(eventWithUser)
+      });
+      if (res.ok) {
+        const newEvent = await res.json();
+        setEvents(prev => [...prev, newEvent]);
+        setShowForm(false);
+      } else {
+        const err = await res.json();
+        setError(err.message || "Failed to add event");
+      }
+    } catch (e) {
+      setError("Failed to add event");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#f2f6f1]">
       <div className="max-w-7xl mx-auto px-6 py-14">
 
-        {/* Header */}
         <div className="text-center mb-14">
           <h1 className="text-4xl font-bold text-slate-900 mb-4">
             McKinney Community Events 🎉
@@ -101,7 +127,6 @@ const EventsPage = () => {
           </p>
         </div>
 
-        {/* Filters */}
         <div className="bg-white/90 backdrop-blur rounded-2xl shadow-md p-6 mb-10">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <input
@@ -128,7 +153,6 @@ const EventsPage = () => {
           </div>
         </div>
 
-        {/* Events Grid */}
         {loading ? (
           <div className="text-center py-20 text-emerald-700 animate-pulse">
             Loading events…
@@ -179,7 +203,7 @@ const EventsPage = () => {
         )}
 
         {selectedEvent && <EventModal event={selectedEvent} onClose={() => setSelectedEvent(null)} />}
-        {showForm && <EventForm onSubmit={() => setShowForm(false)} onCancel={() => setShowForm(false)} error={error} />}
+        {showForm && <EventForm onSubmit={handleCreateEvent} onCancel={() => setShowForm(false)} error={error} />}
       </div>
     </div>
   );
