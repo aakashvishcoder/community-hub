@@ -119,8 +119,7 @@ const NewsPage = () => {
 
   const displayedNews = useMemo(() => {
     return [...externalNews, ...news]
-      .sort((a, b) => new Date(b.date) - new Date(a.date))
-      .slice(0, 9);
+      .sort((a, b) => new Date(b.date) - new Date(a.date));
   }, [news, externalNews]);
 
   
