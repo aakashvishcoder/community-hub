@@ -8,7 +8,7 @@ const router = express.Router();
 router.get('/', async (req, res) => {
   try {
     const { search, category } = req.query;
-    let filter = { city: 'McKinney, Texas' };
+    let filter = { city: { $in: ['McKinney, Texas', 'Dallas, Texas'] } };
 
     if (search) {
       filter.$or = [

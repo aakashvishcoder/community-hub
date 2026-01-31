@@ -14,7 +14,7 @@ const Header = () => {
     const handleMouseLeave = () => {
       closeTimeoutRef.current = setTimeout(() => {
         setIsPlacesOpen(false);
-      }, 180); // delay (tweak 150–250ms)
+      }, 180); 
     };
   const location = useLocation();
   const navigate = useNavigate();
@@ -49,8 +49,8 @@ const Header = () => {
       <header className="sticky top-0 z-50 bg-[#fafaf7]/90 backdrop-blur border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-6 py-5">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <Link to="/" className="font-libre text-xl font-semibold text-slate-900">
-              McKinney Commons
+            <Link to="/" className="flex items-center font-libre text-xl font-semibold text-slate-900">
+              <img src="/logo.png" alt="Logo" className="h-10 w-10 object-contain" />
             </Link>
             {!isAuthPage && (
               <>
