@@ -1,7 +1,8 @@
-
-
-
-
+const express = require('express');
+const News = require('../models/News');
+const User = require('../models/User');
+const Profile = require('../models/Profile');
+const fetch = require('node-fetch');
 const router = express.Router();
 
 router.get('/external', async (req, res) => {
