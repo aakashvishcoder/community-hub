@@ -2,7 +2,14 @@ const express = require('express');
 const News = require('../models/News');
 const User = require('../models/User');
 const Profile = require('../models/Profile');
-const fetch = require('node-fetch');
+// Use global fetch if available (Node.js v18+), otherwise require node-fetch dynamically
+let fetchFn;
+try {
+  fetchFn = fetch;
+} catch (e) {
+  fetchFn = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+}
+
 const router = express.Router();
 
 router.get('/external', async (req, res) => {
@@ -20,7 +27,7 @@ router.get('/external', async (req, res) => {
 
     let url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&language=en&sortBy=publishedAt&pageSize=30&apiKey=${NEWS_API_KEY}`;
 
-    const response = await fetch(url);
+    const response = await fetchFn(url);
     const data = await response.json();
     if (data.status !== 'ok') {
       return res.status(502).json({ message: 'Failed to fetch external news', error: data });
@@ -135,7 +142,10 @@ router.get('/external', async (req, res) => {
       query += ` AND (${search})`;
     }
 
+    let url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&language=en&sortBy=publishedAt&pageSize=30&apiKey=${NEWS_API_KEY}`;
 
+    const response = await fetchFn(url);
+    const data = await response.json();
     if (data.status !== 'ok') {
       return res.status(502).json({ message: 'Failed to fetch external news', error: data });
     }
@@ -285,7 +295,7 @@ router.get('/', async (req, res) => {
 
         let url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&language=en&sortBy=publishedAt&pageSize=30&apiKey=${NEWS_API_KEY}`;
 
-        const response = await fetch(url);
+        const response = await fetchFn(url);
         const data = await response.json();
         if (data.status !== 'ok') {
           return res.status(502).json({ message: 'Failed to fetch external news', error: data });
@@ -335,7 +345,7 @@ router.get('/external', async (req, res) => {
 
     let url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&language=en&sortBy=publishedAt&pageSize=30&apiKey=${NEWS_API_KEY}`;
 
-    const response = await fetch(url);
+    const response = await fetchFn(url);
     const data = await response.json();
     if (data.status !== 'ok') {
       return res.status(502).json({ message: 'Failed to fetch external news', error: data });
