@@ -2,7 +2,6 @@ const express = require('express');
 const News = require('../models/News');
 const User = require('../models/User');
 const Profile = require('../models/Profile');
-// Use global fetch if available (Node.js v18+), otherwise require node-fetch dynamically
 let fetchFn;
 try {
   fetchFn = fetch;
@@ -20,7 +19,7 @@ router.get('/external', async (req, res) => {
     }
 
     const { search, category } = req.query;
-    let query = '("Dallas" OR "Dallas TX")';
+    let query = '("McKinney" OR "McKinney TX" OR "Dallas" OR "Dallas TX")';
     if (search && search.trim()) {
       query += ` AND (${search})`;
     }
