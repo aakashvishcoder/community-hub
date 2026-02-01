@@ -1,10 +1,6 @@
 
 
-const express = require('express');
-const News = require('../models/News');
-const User = require('../models/User');
-const Profile = require('../models/Profile');
-const fetch = require('node-fetch');
+
 
 const router = express.Router();
 
@@ -251,14 +247,7 @@ router.get('/:id', async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 });
-const express = require('express');
-const News = require('../models/News');
-const User = require('../models/User');
-const Profile = require('../models/Profile');
 
-const fetch = require('node-fetch');
-
-// Removed duplicate router declaration
 
 router.get('/', async (req, res) => {
   try {
