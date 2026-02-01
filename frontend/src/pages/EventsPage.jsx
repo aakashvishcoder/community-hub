@@ -87,7 +87,6 @@ const EventsPage = () => {
 
   useEffect(() => { loadEvents(); }, [searchTerm, selectedCategory]);
 
-  // Add event handler
   const handleCreateEvent = async (eventData) => {
     setError("");
     try {
@@ -120,7 +119,7 @@ const EventsPage = () => {
 
         <div className="text-center mb-14">
           <h1 className="text-4xl font-bold text-slate-900 mb-4">
-            McKinney Community Events 🎉
+            McKinney Community Events 
           </h1>
           <p className="text-slate-600 max-w-3xl mx-auto">
             Explore official city events and community-submitted gatherings happening around McKinney.
