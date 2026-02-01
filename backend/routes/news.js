@@ -3,6 +3,8 @@ const News = require('../models/News');
 const User = require('../models/User');
 const Profile = require('../models/Profile');
 
+const fetch = require('node-fetch');
+
 const router = express.Router();
 
 router.get('/', async (req, res) => {
@@ -82,3 +84,44 @@ router.get('/:id', async (req, res) => {
 });
 
 module.exports = router;
+
+router.get('/external', async (req, res) => {
+  try {
+    const NEWS_API_KEY = process.env.NEWS_API_KEY;
+    if (!NEWS_API_KEY) {
+      return res.status(500).json({ message: 'News API key not set on server' });
+    }
+
+    const { search, category } = req.query;
+    let query = '("Dallas" OR "Dallas TX")';
+    if (search && search.trim()) {
+      query += ` AND (${search})`;
+    }
+
+    let url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&language=en&sortBy=publishedAt&pageSize=30&apiKey=${NEWS_API_KEY}`;
+
+    const response = await fetch(url);
+    const data = await response.json();
+    if (data.status !== 'ok') {
+      return res.status(502).json({ message: 'Failed to fetch external news', error: data });
+    }
+
+    let articles = data.articles.map(a => ({
+      _id: a.url,
+      title: a.title,
+      excerpt: a.description || 'Click to read more',
+      content: a.content,
+      image: a.urlToImage,
+      // No category mapping here; frontend can map if needed
+      date: a.publishedAt,
+      source: a.source.name,
+      url: a.url,
+      external: true
+    }));
+
+    res.json(articles);
+  } catch (error) {
+    console.error('External news error:', error);
+    res.status(500).json({ message: 'Server error fetching external news' });
+  }
+});

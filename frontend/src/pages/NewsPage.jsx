@@ -19,7 +19,7 @@ const NewsPage = () => {
 
 
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || '';
-  const NEWS_API_KEY = import.meta.env.VITE_NEWS_API_KEY;
+  // No longer needed: const NEWS_API_KEY = import.meta.env.VITE_NEWS_API_KEY;
 
   const categories = [
     'all',
@@ -70,34 +70,20 @@ const NewsPage = () => {
   };
 
   const loadExternalNews = async () => {
-    if (!NEWS_API_KEY) return;
     try {
-      const query = searchTerm.trim() 
-        ? `("Dallas" OR "Dallas TX") AND (${searchTerm})` 
-        : `("Dallas" OR "Dallas TX")`;
+      const params = new URLSearchParams();
+      if (searchTerm.trim()) params.append('search', searchTerm);
+      if (selectedCategory !== 'all') params.append('category', selectedCategory);
 
-      const res = await fetch(
-        `https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}` +
-        `&language=en&sortBy=publishedAt&pageSize=30&apiKey=${NEWS_API_KEY}`
-      );
-
-      const data = await res.json();
-      if (data.status !== 'ok') return;
-
-      const formatted = data.articles.map(a => ({
-        _id: a.url,
-        title: a.title,
-        excerpt: a.description || 'Click to read more',
-        content: a.content,
-        image: a.urlToImage,
-        category: mapCategory(a.title, a.description || ''),
-        date: a.publishedAt,
-        source: a.source.name,
-        url: a.url,
-        external: true
-      }));
-
-    
+      const res = await fetch(`${BACKEND_URL}/api/news/external?${params.toString()}`);
+      const articles = await res.json();
+      // Map category on frontend for consistency
+      const formatted = Array.isArray(articles)
+        ? articles.map(a => ({
+            ...a,
+            category: mapCategory(a.title, a.excerpt || ''),
+          }))
+        : [];
       if (selectedCategory !== 'all') {
         setExternalNews(formatted.filter(art => art.category === selectedCategory));
       } else {
