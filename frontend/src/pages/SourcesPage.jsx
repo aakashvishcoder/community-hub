@@ -79,6 +79,18 @@ const SourcesPage = () => {
         url: 'https://newsapi.org/',
         description: 'API for news headlines and articles.'
       }
+    ],
+    documents: [
+      {
+        name: 'Webmaster Copyright Checklist (PDF)',
+        url: '/src/assets/webmaster%20copyright%20checklist.pdf',
+        description: 'Checklist for copyright compliance and best practices.'
+      },
+      {
+        name: 'Webmaster Work Log (PDF)',
+        url: '/src/assets/Webmaster%20work%20log.pdf',
+        description: 'Work log documenting webmaster activities.'
+      }
     ]
   };
 
